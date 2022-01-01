@@ -29,7 +29,7 @@ message IsReadOnlyResponse {
 
 // HostUI offers services intended for the Bhojpur Host web user interface
 service HostUI {
-    // ListInstanceSpecs returns a list of Mobile Instance(s) that can be started through the UI.
+    // ListInstanceSpecs returns a list of Host Instance(s) that can be started through the UI.
     rpc ListInstanceSpecs(ListInstanceSpecsRequest) returns (stream ListInstanceSpecsResponse) {};
 
     // IsReadOnly returns true if the UI is readonly.

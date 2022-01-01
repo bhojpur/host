@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HostServiceClient interface {
-	// StartLocalInstance starts an Instance on the Bhojpur.NET Platform directly.
+	// StartLocalInstance starts a Host Instance on the Bhojpur.NET Platform directly.
 	// The incoming requests are expected in the following order:
 	//   1. metadata
 	//   2. all bytes constituting the host/config.yaml
@@ -198,7 +198,7 @@ func (c *hostServiceClient) StopInstance(ctx context.Context, in *StopInstanceRe
 // All implementations must embed UnimplementedHostServiceServer
 // for forward compatibility
 type HostServiceServer interface {
-	// StartLocalInstance starts an Instance on the Bhojpur.NET Platform directly.
+	// StartLocalInstance starts a Host Instance on the Bhojpur.NET Platform directly.
 	// The incoming requests are expected in the following order:
 	//   1. metadata
 	//   2. all bytes constituting the host/config.yaml

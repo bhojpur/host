@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HostUIClient interface {
-	// ListInstanceSpecs returns a list of Mobile Instance(s) that can be started through the UI.
+	// ListInstanceSpecs returns a list of Host Instance(s) that can be started through the UI.
 	ListInstanceSpecs(ctx context.Context, in *ListInstanceSpecsRequest, opts ...grpc.CallOption) (HostUI_ListInstanceSpecsClient, error)
 	// IsReadOnly returns true if the UI is readonly.
 	IsReadOnly(ctx context.Context, in *IsReadOnlyRequest, opts ...grpc.CallOption) (*IsReadOnlyResponse, error)
@@ -77,7 +77,7 @@ func (c *hostUIClient) IsReadOnly(ctx context.Context, in *IsReadOnlyRequest, op
 // All implementations must embed UnimplementedHostUIServer
 // for forward compatibility
 type HostUIServer interface {
-	// ListInstanceSpecs returns a list of Mobile Instance(s) that can be started through the UI.
+	// ListInstanceSpecs returns a list of Host Instance(s) that can be started through the UI.
 	ListInstanceSpecs(*ListInstanceSpecsRequest, HostUI_ListInstanceSpecsServer) error
 	// IsReadOnly returns true if the UI is readonly.
 	IsReadOnly(context.Context, *IsReadOnlyRequest) (*IsReadOnlyResponse, error)
