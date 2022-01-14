@@ -1,4 +1,4 @@
-package process
+package signal
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,19 +20,46 @@ package process
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import "os"
+import (
+	"syscall"
+	"testing"
+)
 
-// IsProcessAlive returns true if process with a given pid is running.
-func IsProcessAlive(pid int) bool {
-	_, err := os.FindProcess(pid)
+func TestParseSignal(t *testing.T) {
+	_, err := ParseSignal("0")
+	expectedErr := "invalid signal: 0"
+	if err == nil || err.Error() != expectedErr {
+		t.Errorf("expected  %q, but got %v", expectedErr, err)
+	}
 
-	return err == nil
+	_, err = ParseSignal("SIG")
+	expectedErr = "invalid signal: SIG"
+	if err == nil || err.Error() != expectedErr {
+		t.Errorf("expected  %q, but got %v", expectedErr, err)
+	}
+
+	for sigStr := range SignalMap {
+		responseSignal, err := ParseSignal(sigStr)
+		if err != nil {
+			t.Error(err)
+		}
+		signal := SignalMap[sigStr]
+		if responseSignal != signal {
+			t.Errorf("expected: %q, got: %q", signal, responseSignal)
+		}
+	}
 }
 
-// KillProcess force-stops a process.
-func KillProcess(pid int) {
-	p, err := os.FindProcess(pid)
-	if err == nil {
-		_ = p.Kill()
+func TestValidSignalForPlatform(t *testing.T) {
+	isValidSignal := ValidSignalForPlatform(syscall.Signal(0))
+	if isValidSignal {
+		t.Error("expected !isValidSignal")
+	}
+
+	for _, sigN := range SignalMap {
+		isValidSignal = ValidSignalForPlatform(sigN)
+		if !isValidSignal {
+			t.Error("expected isValidSignal")
+		}
 	}
 }

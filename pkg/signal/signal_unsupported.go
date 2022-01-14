@@ -1,4 +1,7 @@
-package process
+//go:build !linux && !darwin && !freebsd && !windows
+// +build !linux,!darwin,!freebsd,!windows
+
+package signal
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,19 +23,9 @@ package process
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import "os"
+import (
+	"syscall"
+)
 
-// IsProcessAlive returns true if process with a given pid is running.
-func IsProcessAlive(pid int) bool {
-	_, err := os.FindProcess(pid)
-
-	return err == nil
-}
-
-// KillProcess force-stops a process.
-func KillProcess(pid int) {
-	p, err := os.FindProcess(pid)
-	if err == nil {
-		_ = p.Kill()
-	}
-}
+// SignalMap is an empty map of signals for unsupported platform.
+var SignalMap = map[string]syscall.Signal{}
