@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+
+source $(dirname $0)/version
+
+if [ -z "$ARCH" ]; then
+    ARCH=amd64
+fi
+
+SUFFIX=""
+[ "${ARCH}" != "amd64" ] && SUFFIX="_${ARCH}"
+
+TAG=${TAG:-${VERSION}${SUFFIX}}
+REPO=${REPO:-bhojpur}
+IMAGE=${REPO}/host:${TAG}
+
+cd $(dirname $0)/..
+BASEDIR=$(pwd)
+mkdir -p $BASEDIR/dist/artifacts
+
+cd $BASEDIR/bin
+tar -cvzf $BASEDIR/dist/artifacts/hostutl-${ARCH}.tar.gz machine
+cd $BASEDIR
+
+cp ./bin/hostutl ./package
+
+docker build -f package/Dockerfile -t ${IMAGE} package

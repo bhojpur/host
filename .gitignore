@@ -1,0 +1,10 @@
+*.log
+*.iml
+.idea/
+/bin
+cover
+/.dapper
+/dist
+*.swp
+bhojpur-machine
+.DS_Store

@@ -1,0 +1,6 @@
+*.log
+cover
+bin
+./bin
+./.dapper
+./dist

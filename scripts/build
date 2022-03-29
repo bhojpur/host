@@ -1,0 +1,31 @@
+#!/bin/bash
+set -ex
+
+cd $(dirname $0)/..
+
+. ./scripts/version
+
+mkdir -p bin
+
+if [ "$CROSS" = 1 ]; then
+    CGO_ENABLED=0 GOOS=darwin go build -ldflags "-X main.VERSION=$VERSION"  -o ./bin/hostutl-Darwin-x86_64 ./cmd/machine
+    CGO_ENABLED=0 GOOS=windows go build -ldflags "-X main.VERSION=$VERSION" -o ./bin/hostutl-Windows-x86_64.exe ./cmd/machine
+    CGO_ENABLED=0 GOARCH=arm64 go build -a -tags netgo -installsuffix netgo -ldflags "-X main.VERSION=$VERSION" -o ./bin/hostutl-Linux-arm64 ./cmd/machine
+    CGO_ENABLED=0 GOARCH=ppc64le go build -a -tags netgo -installsuffix netgo -ldflags "-X main.VERSION=$VERSION" -o ./bin/hostutl-Linux-ppc64le ./cmd/machine
+    CGO_ENABLED=0 GOARCH=s390x go build -a -tags netgo -installsuffix netgo -ldflags "-X main.VERSION=$VERSION" -o ./bin/hostutl-Linux-s390x ./cmd/machine
+    CGO_ENABLED=0 GOARCH=arm GOARM=6 go build -a -tags netgo -installsuffix netgo -ldflags "-X main.VERSION=$VERSION" -o ./bin/hostutl-Linux-arm ./cmd/machine
+    CGO_ENABLED=0 GOARCH=arm GOARM=6 go build -a -tags netgo -installsuffix netgo -ldflags "-X main.VERSION=$VERSION" -o ./bin/hostutl-Linux-armv6l ./cmd/machine
+    CGO_ENABLED=0 GOARCH=arm GOARM=7 go build -a -tags netgo -installsuffix netgo -ldflags "-X main.VERSION=$VERSION" -o ./bin/hostutl-Linux-armv7l ./cmd/machine
+    CGO_ENABLED=0 GOARCH=amd64 go build -a -tags netgo -installsuffix netgo -ldflags "-X main.VERSION=$VERSION -extldflags '-static -s'" -o ./bin/hostutl-Linux-x86_64 ./cmd/machine
+    cp ./bin/hostutl-Linux-arm64 ./bin/hostutl-Linux-aarch64
+
+    cp ./bin/hostutl-$(uname -s)-$(uname -m) ./bin/hostutl
+    echo Built ./bin/hostutl-$(uname -s)-$(uname -m)
+else
+    CGO_ENABLED=0 go build -a -tags netgo -installsuffix netgo \
+        -ldflags "-w -s -extldflags '-static'
+         -X github.com/bhojpur/host/pkg/version.Version=$VERSION
+         -X github.com/bhojput/host/pkg/version.GitCommit=$COMMIT" \
+        -o ./bin/hostutl ./cmd/machine
+    ./bin/hostutl --version
+fi

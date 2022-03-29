@@ -61,8 +61,8 @@ var rootCmdOpts struct {
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "host",
-	Short: "Bhojpur Host is an elastic computing resource provider powered by Kubernetes",
+	Use:   "hostctl",
+	Short: "Bhojpur Hostctl is an elastic computing resource provider",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if verbose {
 			log.SetLevel(log.DebugLevel)
