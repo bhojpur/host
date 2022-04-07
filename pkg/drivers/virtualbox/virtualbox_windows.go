@@ -28,7 +28,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 	"golang.org/x/sys/windows/registry"
 )
 

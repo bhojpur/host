@@ -25,8 +25,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/bhojpur/host/pkg/core"
-	cengine "github.com/bhojpur/host/pkg/core/client"
+	core "github.com/bhojpur/host/pkg/machine"
+	cengine "github.com/bhojpur/host/pkg/machine/client"
 )
 
 func cmdVersion(c CommandLine, api core.API) error {

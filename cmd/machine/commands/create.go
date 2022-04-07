@@ -37,17 +37,17 @@ import (
 	"time"
 
 	mdirs "github.com/bhojpur/host/cmd/machine/commands/dirs"
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/auth"
-	"github.com/bhojpur/host/pkg/core/crashreport"
-	"github.com/bhojpur/host/pkg/core/drivers"
-	rpcdriver "github.com/bhojpur/host/pkg/core/drivers/rpc"
-	"github.com/bhojpur/host/pkg/core/engine"
-	merrors "github.com/bhojpur/host/pkg/core/errors"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
-	"github.com/bhojpur/host/pkg/core/host"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/swarm"
+	"github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/auth"
+	"github.com/bhojpur/host/pkg/machine/crashreport"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	rpcdriver "github.com/bhojpur/host/pkg/machine/drivers/rpc"
+	"github.com/bhojpur/host/pkg/machine/engine"
+	merrors "github.com/bhojpur/host/pkg/machine/errors"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
+	"github.com/bhojpur/host/pkg/machine/host"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/swarm"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 )
@@ -406,7 +406,7 @@ func getDriverOpts(c CommandLine, mcnflags []mflag.Flag) *rpcdriver.RPCFlags {
 		if ok {
 			driverOpts.Values[name] = getter.Get()
 		} else {
-			// TODO: This is pretty hacky.  StringSlice is the only
+			// TODO: This is pretty hacky. StringSlice is the only
 			// type so far we have to worry about which is not a
 			// Getter, though.
 			if c.IsSet(name) {

@@ -26,8 +26,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
 	"github.com/vmware/govmomi/vim25/types"
 )
 

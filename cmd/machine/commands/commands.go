@@ -27,14 +27,14 @@ import (
 	"strings"
 
 	mdirs "github.com/bhojpur/host/cmd/machine/commands/dirs"
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/crashreport"
-	merrors "github.com/bhojpur/host/pkg/core/errors"
-	"github.com/bhojpur/host/pkg/core/host"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/persist"
-	"github.com/bhojpur/host/pkg/core/ssh"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	core "github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/crashreport"
+	merrors "github.com/bhojpur/host/pkg/machine/errors"
+	"github.com/bhojpur/host/pkg/machine/host"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/persist"
+	"github.com/bhojpur/host/pkg/machine/ssh"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 	"github.com/urfave/cli"
 )
 
@@ -120,8 +120,8 @@ func runAction(actionName string, c CommandLine, api core.API) error {
 	)
 
 	// If user did not specify a machine name explicitly, use the 'default'
-	// machine if it exists.  This allows short form commands such as
-	// 'bhojpur-machine stop' for convenience.
+	// machine, if it exists. This allows short form commands, such as:
+	// 'hostutl stop' for convenience.
 	if len(c.Args()) == 0 {
 		target, err := targetHost(c, api)
 		if err != nil {
@@ -170,7 +170,7 @@ func runCommand(command func(commandLine CommandLine, api core.API) error) func(
 		}
 		api.GithubAPIToken = context.GlobalString("github-api-token")
 
-		// TODO (nathanleclaire): These should ultimately be accessed
+		// TODO: These should ultimately be accessed
 		// through the libmachine client by the rest of the code and
 		// not through their respective modules.  For now, however,
 		// they are also being set the way that they originally were
@@ -261,7 +261,7 @@ var Commands = []cli.Command{
 	},
 	{
 		Name:        "env",
-		Usage:       "Display the commands to set up the environment for the Bhojpur Host client",
+		Usage:       "Display the commands to set up the environment for the client",
 		Description: "Argument is a Bhojpur Host machine name.",
 		Action:      runCommand(cmdEnv),
 		Flags: []cli.Flag{

@@ -27,13 +27,13 @@ import (
 
 	mdirs "github.com/bhojpur/host/cmd/machine/commands/dirs"
 	ctest "github.com/bhojpur/host/cmd/machine/commands/test"
-	"github.com/bhojpur/host/pkg/core"
-	atest "github.com/bhojpur/host/pkg/core/apitest"
-	"github.com/bhojpur/host/pkg/core/auth"
-	"github.com/bhojpur/host/pkg/core/check"
-	"github.com/bhojpur/host/pkg/core/host"
-	"github.com/bhojpur/host/pkg/core/state"
 	"github.com/bhojpur/host/pkg/drivers/fakedriver"
+	core "github.com/bhojpur/host/pkg/machine"
+	atest "github.com/bhojpur/host/pkg/machine/apitest"
+	"github.com/bhojpur/host/pkg/machine/auth"
+	"github.com/bhojpur/host/pkg/machine/check"
+	"github.com/bhojpur/host/pkg/machine/host"
+	"github.com/bhojpur/host/pkg/machine/state"
 	"github.com/stretchr/testify/assert"
 )
 

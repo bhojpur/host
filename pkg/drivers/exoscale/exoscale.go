@@ -34,15 +34,15 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/state"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/state"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 	"github.com/exoscale/egoscale"
 )
 
-// Driver is the struct compatible with github.com/bhojpur/host/pkg/core/drivers.Driver interface
+// Driver is the struct compatible with github.com/bhojpur/host/pkg/machine/drivers.Driver interface
 type Driver struct {
 	*drivers.BaseDriver
 	URL              string
@@ -278,7 +278,7 @@ func (d *Driver) virtualMachine() (*egoscale.VirtualMachine, error) {
 	return virtualMachine, nil
 }
 
-// GetState returns a github.com/bhojpur/host/pkg/core/state.State representing the state
+// GetState returns a github.com/bhojpur/host/pkg/machine/state.State representing the state
 // of the host (running, stopped, etc.)
 func (d *Driver) GetState() (state.State, error) {
 	vm, err := d.virtualMachine()

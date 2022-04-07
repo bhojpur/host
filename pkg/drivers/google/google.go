@@ -27,11 +27,11 @@ import (
 	"net"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/ssh"
-	"github.com/bhojpur/host/pkg/core/state"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/ssh"
+	"github.com/bhojpur/host/pkg/machine/state"
 )
 
 // Driver is a struct compatible with the bhojpur.hosts.drivers.Driver interface.

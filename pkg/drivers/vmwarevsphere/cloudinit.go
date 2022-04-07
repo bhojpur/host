@@ -29,7 +29,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 	"github.com/vmware/govmomi/object"
 	"github.com/vmware/govmomi/vim25/soap"
 	"github.com/vmware/govmomi/vim25/types"

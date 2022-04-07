@@ -26,7 +26,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/bhojpur/host/pkg/core"
+	core "github.com/bhojpur/host/pkg/machine"
 )
 
 var funcMap = template.FuncMap{

@@ -23,7 +23,7 @@ package azureutil
 import (
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-12-01/compute"
 	"github.com/Azure/go-autorest/autorest/to"

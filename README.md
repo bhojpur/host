@@ -14,13 +14,69 @@ as we would expect inputs provided by other things (e.g., Terraform or User Infe
 
 ## Key Features
 
-- Computing Host Framework
-- Clustering Framework
+- Computing Machine instance management
+- Container Cluster management framework
 
-## Simple Usage
+## Computing Machine Instance
+
+List of hosting `machines` available in the resource pool
 
 ```bash
-$ hostutl
+$ hostutl ls
+```
+
+Creating a new `machine` instance locally using `virtualbox` driver
+
+```bash
+$ hostutl create --driver virtualbox default
+```
+
+Removing a host `machine` from managed resource pool
+
+```bash
+$ hostutl rm default
+```
+
+## Container Cluster Management
+
+A list of commands to manage `Kubernetes Cluster` in a multi-cloud environment
+
+```bash
+$ hostfarm create --driver $driverName [OPTIONS] cluster-name
+$ hostfarm inspect cluster-name
+$ hostfarm ls
+$ hostfarm update [OPTIONS] cluster-name
+$ hostfarm rm cluster-name
+```
+
+To see what driver `create` options it has, run
+
+```bash
+$ hostfarm `create --driver` $driverName --help
+```
+
+To see what `update` options for a cluster, run
+
+```bash
+$ hostfarm update --help cluster-name
+```
+
+A `serviceAccountToken` that binds to the `clusterAdmin` is automatically created for you,
+to see what it is, run the following command
+
+```bash
+$ hostfarm inspect clusterName
+```
+
+Before running `Google Kubernetes Engine` driver, make sure you have the credential. To get
+the credential, you can run any of the steps below
+
+`gcloud auth login` or,
+
+`export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gce-credentials.json` or,
+
+```bash
+$ hostfarm create --driver gke --gke-credential-path /path/to/credential cluster-name
 ```
 
 ## Build Source Code

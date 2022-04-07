@@ -23,7 +23,7 @@ package vmwarefusion
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import "github.com/bhojpur/host/pkg/core/drivers"
+import "github.com/bhojpur/host/pkg/machine/drivers"
 
 func NewDriver(hostName, storePath string) drivers.Driver {
 	return drivers.NewDriverNotSupported("vmwarefusion", hostName, storePath)

@@ -30,11 +30,11 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/state"
 	"github.com/bhojpur/host/pkg/drivers/azure/azureutil"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/state"
 
 	"github.com/Azure/azure-sdk-for-go/services/storage/mgmt/2019-06-01/storage"
 	"github.com/Azure/go-autorest/autorest/azure"

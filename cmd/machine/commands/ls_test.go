@@ -26,12 +26,12 @@ import (
 	"testing"
 	"time"
 
-	cengine "github.com/bhojpur/host/pkg/core/client"
-	"github.com/bhojpur/host/pkg/core/engine"
-	"github.com/bhojpur/host/pkg/core/host"
-	"github.com/bhojpur/host/pkg/core/state"
-	"github.com/bhojpur/host/pkg/core/swarm"
 	"github.com/bhojpur/host/pkg/drivers/fakedriver"
+	cengine "github.com/bhojpur/host/pkg/machine/client"
+	"github.com/bhojpur/host/pkg/machine/engine"
+	"github.com/bhojpur/host/pkg/machine/host"
+	"github.com/bhojpur/host/pkg/machine/state"
+	"github.com/bhojpur/host/pkg/machine/swarm"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -425,8 +425,8 @@ func TestGetHostListItemsEnvBhojpurHostUnset(t *testing.T) {
 func TestIsActive(t *testing.T) {
 	cases := []struct {
 		bhojpurHost string
-		state      state.State
-		expected   bool
+		state       state.State
+		expected    bool
 	}{
 		{"", state.Running, false},
 		{"tcp://5.6.7.8:2376", state.Running, false},

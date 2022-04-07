@@ -24,14 +24,14 @@ import (
 	"testing"
 
 	ctest "github.com/bhojpur/host/cmd/machine/commands/test"
-	"github.com/bhojpur/host/pkg/core"
-	atest "github.com/bhojpur/host/pkg/core/apitest"
-	"github.com/bhojpur/host/pkg/core/auth"
-	"github.com/bhojpur/host/pkg/core/engine"
-	"github.com/bhojpur/host/pkg/core/host"
-	"github.com/bhojpur/host/pkg/core/provision"
-	"github.com/bhojpur/host/pkg/core/swarm"
 	"github.com/bhojpur/host/pkg/drivers/fakedriver"
+	core "github.com/bhojpur/host/pkg/machine"
+	atest "github.com/bhojpur/host/pkg/machine/apitest"
+	"github.com/bhojpur/host/pkg/machine/auth"
+	"github.com/bhojpur/host/pkg/machine/engine"
+	"github.com/bhojpur/host/pkg/machine/host"
+	"github.com/bhojpur/host/pkg/machine/provision"
+	"github.com/bhojpur/host/pkg/machine/swarm"
 	"github.com/stretchr/testify/assert"
 )
 

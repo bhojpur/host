@@ -32,8 +32,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/log"
 	"github.com/bhojpur/host/pkg/drivers/driverutil"
+	"github.com/bhojpur/host/pkg/machine/log"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	raw "google.golang.org/api/compute/v1"

@@ -28,9 +28,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/log"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
-	"github.com/bhojpur/host/pkg/core/version"
+	"github.com/bhojpur/host/pkg/machine/log"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
+	"github.com/bhojpur/host/pkg/machine/version"
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/gophercloud/openstack"
 	"github.com/gophercloud/gophercloud/openstack/blockstorage/v1/volumes"

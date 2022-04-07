@@ -29,12 +29,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/ssh"
-	"github.com/bhojpur/host/pkg/core/state"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/ssh"
+	"github.com/bhojpur/host/pkg/machine/state"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/utils/openstack/clientconfig"

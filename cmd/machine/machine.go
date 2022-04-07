@@ -28,9 +28,6 @@ import (
 
 	"github.com/bhojpur/host/cmd/machine/commands"
 	mdirs "github.com/bhojpur/host/cmd/machine/commands/dirs"
-	"github.com/bhojpur/host/pkg/core/drivers/plugin"
-	"github.com/bhojpur/host/pkg/core/drivers/plugin/localbinary"
-	"github.com/bhojpur/host/pkg/core/log"
 	"github.com/bhojpur/host/pkg/drivers/amazonec2"
 	"github.com/bhojpur/host/pkg/drivers/azure"
 	"github.com/bhojpur/host/pkg/drivers/digitalocean"
@@ -47,6 +44,9 @@ import (
 	"github.com/bhojpur/host/pkg/drivers/vmwarefusion"
 	"github.com/bhojpur/host/pkg/drivers/vmwarevcloudair"
 	"github.com/bhojpur/host/pkg/drivers/vmwarevsphere"
+	"github.com/bhojpur/host/pkg/machine/drivers/plugin"
+	"github.com/bhojpur/host/pkg/machine/drivers/plugin/localbinary"
+	"github.com/bhojpur/host/pkg/machine/log"
 	"github.com/bhojpur/host/pkg/version"
 	"github.com/urfave/cli"
 )
@@ -119,11 +119,11 @@ func main() {
 	app := cli.NewApp()
 	app.Name = filepath.Base(os.Args[0])
 	app.Author = "Bhojpur Consulting Private Limited, India"
-	app.Email = "https://github.com/bhojpur/host"
+	app.Email = "https://www.bhojpur-consulting.com"
 
 	app.Commands = commands.Commands
 	app.CommandNotFound = cmdNotFound
-	app.Usage = "Create and manage machines running Bhojpur Host."
+	app.Usage = "Bhojpur CLI tool for creating and managing machines running Bhojpur Host"
 	app.Version = version.FullVersion()
 
 	log.Debug("Bhojpur Host version: ", app.Version)
@@ -166,7 +166,7 @@ func main() {
 		cli.StringFlag{
 			EnvVar: "MACHINE_GITHUB_API_TOKEN",
 			Name:   "github-api-token",
-			Usage:  "Token to use for requests to the Github API",
+			Usage:  "Token to use for requests to the GitHub API",
 			Value:  "",
 		},
 		cli.BoolFlag{
@@ -240,7 +240,7 @@ func runDriver(driverName string) {
 	case "pod":
 		plugin.RegisterDriver(pod.NewDriver("", ""))
 	default:
-		fmt.Fprintf(os.Stderr, "Unsupported driver: %s\n", driverName)
+		fmt.Fprintf(os.Stderr, "Unsupported Bhojpur Host driver: %s\n", driverName)
 		os.Exit(1)
 	}
 }

@@ -23,8 +23,8 @@ package commands
 import (
 	"fmt"
 
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/state"
+	core "github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/state"
 )
 
 type errStateInvalidForSSH struct {

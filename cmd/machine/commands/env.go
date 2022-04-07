@@ -30,14 +30,14 @@ import (
 	"text/template"
 
 	mdirs "github.com/bhojpur/host/cmd/machine/commands/dirs"
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/check"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/shell"
+	core "github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/check"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/shell"
 )
 
 const (
-	envTmpl = `{{ .Prefix }}DOCKER_TLS_VERIFY{{ .Delimiter }}{{ .BhojpurTLSVerify }}{{ .Suffix }}{{ .Prefix }}DOCKER_HOST{{ .Delimiter }}{{ .BhojpurHost }}{{ .Suffix }}{{ .Prefix }}DOCKER_CERT_PATH{{ .Delimiter }}{{ .BhojpurCertPath }}{{ .Suffix }}{{ .Prefix }}DOCKER_MACHINE_NAME{{ .Delimiter }}{{ .MachineName }}{{ .Suffix }}{{ if .ComposePathsVar }}{{ .Prefix }}COMPOSE_CONVERT_WINDOWS_PATHS{{ .Delimiter }}true{{ .Suffix }}{{end}}{{ if .NoProxyVar }}{{ .Prefix }}{{ .NoProxyVar }}{{ .Delimiter }}{{ .NoProxyValue }}{{ .Suffix }}{{end}}{{ .UsageHint }}`
+	envTmpl = `{{ .Prefix }}BHOJPUR_TLS_VERIFY{{ .Delimiter }}{{ .BhojpurTLSVerify }}{{ .Suffix }}{{ .Prefix }}BHOJPUR_HOST{{ .Delimiter }}{{ .BhojpurHost }}{{ .Suffix }}{{ .Prefix }}BHOJPUR_CERT_PATH{{ .Delimiter }}{{ .BhojpurCertPath }}{{ .Suffix }}{{ .Prefix }}BHOJPUR_MACHINE_NAME{{ .Delimiter }}{{ .MachineName }}{{ .Suffix }}{{ if .ComposePathsVar }}{{ .Prefix }}COMPOSE_CONVERT_WINDOWS_PATHS{{ .Delimiter }}true{{ .Suffix }}{{end}}{{ if .NoProxyVar }}{{ .Prefix }}{{ .NoProxyVar }}{{ .Delimiter }}{{ .NoProxyValue }}{{ .Suffix }}{{end}}{{ .UsageHint }}`
 )
 
 var (

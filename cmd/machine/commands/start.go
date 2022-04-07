@@ -21,8 +21,8 @@ package commands
 // THE SOFTWARE.
 
 import (
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/log"
+	core "github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 func cmdStart(c CommandLine, api core.API) error {

@@ -29,7 +29,7 @@ import (
 
 	"fmt"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 var powershell string

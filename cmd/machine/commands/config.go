@@ -26,9 +26,9 @@ import (
 	"path/filepath"
 
 	mdirs "github.com/bhojpur/host/cmd/machine/commands/dirs"
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/check"
-	"github.com/bhojpur/host/pkg/core/log"
+	core "github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/check"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 func cmdConfig(c CommandLine, api core.API) error {
@@ -57,7 +57,7 @@ func cmdConfig(c CommandLine, api core.API) error {
 	tlsCert := filepath.Join(mdirs.GetMachineDir(), host.Name, "cert.pem")
 	tlsKey := filepath.Join(mdirs.GetMachineDir(), host.Name, "key.pem")
 
-	// TODO(nathanleclaire): These magic strings for the certificate file
+	// TODO: These magic strings for the certificate file
 	// names should be cross-package constants.
 	fmt.Printf("--tlsverify\n--tlscacert=%q\n--tlscert=%q\n--tlskey=%q\n-H=%s\n",
 		tlsCACert, tlsCert, tlsKey, bhojpurHost)

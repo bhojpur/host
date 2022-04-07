@@ -23,8 +23,8 @@ package rackspace
 import (
 	"fmt"
 
-	"github.com/bhojpur/host/pkg/core/log"
-	// "github.com/bhojpur/host/pkg/core/version"
+	"github.com/bhojpur/host/pkg/machine/log"
+	// "github.com/bhojpur/host/pkg/machine/version"
 	"github.com/bhojpur/host/pkg/drivers/openstack"
 	"github.com/rackspace/gophercloud"
 	"github.com/rackspace/gophercloud/rackspace"

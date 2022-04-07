@@ -26,7 +26,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 	"github.com/vmware/govmomi/find"
 	"github.com/vmware/govmomi/guest"
 	"github.com/vmware/govmomi/object"

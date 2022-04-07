@@ -23,8 +23,8 @@ package virtualbox
 import (
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 )
 
 // IPWaiter waits for an IP to be configured.

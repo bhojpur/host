@@ -25,9 +25,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core"
-	merrors "github.com/bhojpur/host/pkg/core/errors"
-	"github.com/bhojpur/host/pkg/core/log"
+	core "github.com/bhojpur/host/pkg/machine"
+	merrors "github.com/bhojpur/host/pkg/machine/errors"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 func cmdRm(c CommandLine, api core.API) error {
@@ -36,7 +36,7 @@ func cmdRm(c CommandLine, api core.API) error {
 		return ErrNoMachineSpecified
 	}
 
-	log.Info(fmt.Sprintf("About to remove %s", strings.Join(c.Args(), ", ")))
+	log.Info(fmt.Sprintf("About to remove Bhojpur Host: %s", strings.Join(c.Args(), ", ")))
 	log.Warn("WARNING: This action will delete both local reference and remote instance.")
 
 	force := c.Bool("force")
@@ -51,9 +51,9 @@ func cmdRm(c CommandLine, api core.API) error {
 		err := removeRemoteMachine(hostName, api)
 		if err != nil {
 			if _, ok := err.(merrors.ErrHostDoesNotExist); !ok {
-				errorOccurred = collectError(fmt.Sprintf("Error removing host %q: %s", hostName, err), force, errorOccurred)
+				errorOccurred = collectError(fmt.Sprintf("Error removing Bhojpur Host %q: %s", hostName, err), force, errorOccurred)
 			} else {
-				log.Infof("Machine config for %s does not exists, so nothing to do...", hostName)
+				log.Infof("Bhojpur Host machine config for %s does not exists, so nothing to do...", hostName)
 			}
 		}
 
@@ -62,7 +62,7 @@ func cmdRm(c CommandLine, api core.API) error {
 			if removeErr != nil {
 				errorOccurred = collectError(fmt.Sprintf("Can't remove \"%s\"", hostName), force, errorOccurred)
 			} else {
-				log.Infof("Successfully removed %s", hostName)
+				log.Infof("Successfully removed Bhojpur Host %s", hostName)
 			}
 		}
 	}

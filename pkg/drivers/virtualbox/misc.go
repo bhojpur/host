@@ -26,8 +26,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/ssh"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	"github.com/bhojpur/host/pkg/machine/ssh"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 )
 
 // B2DUpdater describes the interactions with b2d.

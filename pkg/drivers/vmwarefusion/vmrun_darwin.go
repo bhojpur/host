@@ -30,7 +30,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 var (

@@ -23,10 +23,10 @@ package rackspace
 import (
 	"fmt"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
-	"github.com/bhojpur/host/pkg/core/log"
 	"github.com/bhojpur/host/pkg/drivers/openstack"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 // Driver is a machine driver for Rackspace. It's a specialization of the generic OpenStack one.

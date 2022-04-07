@@ -3,6 +3,8 @@
 
 package commands
 
+import core "github.com/bhojpur/host/pkg/machine"
+
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,8 +24,6 @@ package commands
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-import "github.com/bhojpur/host/pkg/core"
 
 func cmdScp(c CommandLine, api core.API) error {
 	args := c.Args()

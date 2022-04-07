@@ -15,6 +15,9 @@ tasks:
         - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostutl cmd/machine/machine.go 
         - chmod 755 bin/hostutl
         - cp bin/hostutl $GOPATH/bin
+        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostfarm cmd/container/container.go 
+        - chmod 755 bin/hostfarm
+        - cp bin/hostfarm $GOPATH/bin
 
     build-web:
         desc: Build the Cloud applications using Go
@@ -84,10 +87,9 @@ tasks:
         - GOFLAGS=-mod=mod go run native/main.go
 
     generate:
-        desc: Generate Go source code from Protool Buffers
+        desc: Generate Go source code from Protocol Buffers
         cmds:
-        - protoc --go_out=plugins=grpc:. --go_opt=paths=source_relative pkg/api/v1/host.proto
-        - protoc --go_out=plugins=grpc:. --go_opt=paths=source_relative pkg/api/v1/host-ui.proto
+        - protoc --go_out=./pkg/container --go-grpc_out=./pkg/container --go_opt=module=github.com/bhojpur/host/pkg/container --go-grpc_opt=require_unimplemented_servers=false,module=github.com/bhojpur/host/pkg/container pkg/container/types/drivers.proto
 
     test:
         desc: Execute all the Unit Tests

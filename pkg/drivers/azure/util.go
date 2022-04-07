@@ -30,12 +30,12 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/to"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/ssh"
-	"github.com/bhojpur/host/pkg/core/state"
 	"github.com/bhojpur/host/pkg/drivers/azure/azureutil"
 	"github.com/bhojpur/host/pkg/drivers/azure/logutil"
 	"github.com/bhojpur/host/pkg/drivers/driverutil"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/ssh"
+	"github.com/bhojpur/host/pkg/machine/state"
 )
 
 var (

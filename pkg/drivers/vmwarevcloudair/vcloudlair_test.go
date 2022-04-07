@@ -23,7 +23,7 @@ package vmwarevcloudair
 import (
 	"testing"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
+	"github.com/bhojpur/host/pkg/machine/drivers"
 	"github.com/stretchr/testify/assert"
 )
 

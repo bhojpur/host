@@ -27,9 +27,9 @@ import (
 	"bytes"
 
 	ctest "github.com/bhojpur/host/cmd/machine/commands/test"
-	atest "github.com/bhojpur/host/pkg/core/apitest"
-	cengine "github.com/bhojpur/host/pkg/core/client"
-	"github.com/bhojpur/host/pkg/core/host"
+	atest "github.com/bhojpur/host/pkg/machine/apitest"
+	cengine "github.com/bhojpur/host/pkg/machine/client"
+	"github.com/bhojpur/host/pkg/machine/host"
 	"github.com/stretchr/testify/assert"
 )
 

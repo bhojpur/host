@@ -27,7 +27,7 @@ import (
 
 	mdirs "github.com/bhojpur/host/cmd/machine/commands/dirs"
 	ctest "github.com/bhojpur/host/cmd/machine/commands/test"
-	"github.com/bhojpur/host/pkg/core/drivers"
+	"github.com/bhojpur/host/pkg/machine/drivers"
 	"github.com/stretchr/testify/assert"
 )
 

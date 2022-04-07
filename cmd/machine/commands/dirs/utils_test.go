@@ -25,7 +25,7 @@ import (
 	"strings"
 	"testing"
 
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 )
 
 func TestGetBaseDir(t *testing.T) {

@@ -39,13 +39,13 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"github.com/bhojpur/host/pkg/core/drivers"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/ssh"
-	"github.com/bhojpur/host/pkg/core/state"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
 	"github.com/bhojpur/host/pkg/drivers/driverutil"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/ssh"
+	"github.com/bhojpur/host/pkg/machine/state"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 	"github.com/bhojpur/host/pkg/version"
 )
 
@@ -920,7 +920,7 @@ func (d *Driver) GetState() (state.State, error) {
 }
 
 func (d *Driver) GetSSHHostname() (string, error) {
-	// TODO: use @nathanleclaire retry func here (ehazlett)
+	// TODO: use retry func here
 	return d.GetIP()
 }
 

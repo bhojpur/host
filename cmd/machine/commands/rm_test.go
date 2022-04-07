@@ -26,9 +26,9 @@ import (
 	"errors"
 
 	ctest "github.com/bhojpur/host/cmd/machine/commands/test"
-	atest "github.com/bhojpur/host/pkg/core/apitest"
-	"github.com/bhojpur/host/pkg/core/host"
 	"github.com/bhojpur/host/pkg/drivers/fakedriver"
+	atest "github.com/bhojpur/host/pkg/machine/apitest"
+	"github.com/bhojpur/host/pkg/machine/host"
 	"github.com/stretchr/testify/assert"
 )
 

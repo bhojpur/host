@@ -33,7 +33,7 @@ import (
 
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 const (

@@ -30,8 +30,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	"github.com/bhojpur/host/pkg/core/state"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	"github.com/bhojpur/host/pkg/machine/state"
 	"github.com/stretchr/testify/assert"
 )
 

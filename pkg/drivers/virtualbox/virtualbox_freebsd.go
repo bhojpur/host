@@ -24,7 +24,7 @@ import (
 	"bytes"
 	"io/ioutil"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 // IsVTXDisabled checks if VT-X is disabled in the BIOS. If it is, the vm will fail to start.

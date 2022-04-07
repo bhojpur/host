@@ -31,8 +31,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/log"
 	"github.com/bhojpur/host/pkg/drivers/azure/logutil"
+	"github.com/bhojpur/host/pkg/machine/log"
 
 	"github.com/Azure/go-autorest/autorest/azure"
 )

@@ -27,8 +27,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/log"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	"github.com/bhojpur/host/pkg/machine/log"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/adal"

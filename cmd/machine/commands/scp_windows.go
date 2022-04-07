@@ -25,7 +25,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/bhojpur/host/pkg/core"
+	"github.com/bhojpur/host/pkg/machine"
 )
 
 func cmdScp(c CommandLine, api core.API) error {

@@ -23,7 +23,7 @@ package commands
 import (
 	"testing"
 
-	"github.com/bhojpur/host/pkg/core/state"
+	"github.com/bhojpur/host/pkg/machine/state"
 	"github.com/stretchr/testify/assert"
 )
 

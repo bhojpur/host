@@ -24,7 +24,7 @@ import (
 	"os"
 	"path/filepath"
 
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 )
 
 var (

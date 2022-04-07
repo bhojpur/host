@@ -26,9 +26,9 @@ import (
 
 	"time"
 
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/persist"
-	"github.com/bhojpur/host/pkg/core/state"
+	core "github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/persist"
+	"github.com/bhojpur/host/pkg/machine/state"
 )
 
 const (

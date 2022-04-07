@@ -23,7 +23,7 @@ package commands
 import (
 	"fmt"
 
-	"github.com/bhojpur/host/pkg/core"
+	core "github.com/bhojpur/host/pkg/machine"
 )
 
 func cmdURL(c CommandLine, api core.API) error {

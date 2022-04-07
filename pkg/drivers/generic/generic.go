@@ -29,12 +29,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/drivers"
-	"github.com/bhojpur/host/pkg/core/engine"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/state"
-	mutils "github.com/bhojpur/host/pkg/core/utils"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	"github.com/bhojpur/host/pkg/machine/engine"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/state"
+	mutils "github.com/bhojpur/host/pkg/machine/utils"
 )
 
 type Driver struct {

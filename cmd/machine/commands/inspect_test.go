@@ -24,8 +24,8 @@ import (
 	"testing"
 
 	ctest "github.com/bhojpur/host/cmd/machine/commands/test"
-	"github.com/bhojpur/host/pkg/core"
-	atest "github.com/bhojpur/host/pkg/core/apitest"
+	core "github.com/bhojpur/host/pkg/machine"
+	atest "github.com/bhojpur/host/pkg/machine/apitest"
 	"github.com/stretchr/testify/assert"
 )
 

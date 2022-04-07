@@ -27,8 +27,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/log"
+	core "github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/log"
 )
 
 var (

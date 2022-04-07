@@ -29,8 +29,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bhojpur/host/pkg/core/log"
 	"github.com/bhojpur/host/pkg/drivers/azure/logutil"
+	"github.com/bhojpur/host/pkg/machine/log"
 
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-12-01/compute"
 	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2019-12-01/network"

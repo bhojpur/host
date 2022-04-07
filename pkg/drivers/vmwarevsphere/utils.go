@@ -29,7 +29,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core/log"
+	"github.com/bhojpur/host/pkg/machine/log"
 	"github.com/vmware/govmomi"
 	"github.com/vmware/govmomi/guest"
 	"github.com/vmware/govmomi/object"

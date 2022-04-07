@@ -26,7 +26,7 @@ import (
 	"flag"
 
 	ctest "github.com/bhojpur/host/cmd/machine/commands/test"
-	mflag "github.com/bhojpur/host/pkg/core/flag"
+	mflag "github.com/bhojpur/host/pkg/machine/flag"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -24,9 +24,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/core"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/state"
+	core "github.com/bhojpur/host/pkg/machine"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/state"
 )
 
 type notFoundError string

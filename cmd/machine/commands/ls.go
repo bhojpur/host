@@ -33,15 +33,15 @@ import (
 
 	"io"
 
-	"github.com/bhojpur/host/pkg/core"
-	cengine "github.com/bhojpur/host/pkg/core/client"
-	"github.com/bhojpur/host/pkg/core/drivers"
-	"github.com/bhojpur/host/pkg/core/engine"
-	"github.com/bhojpur/host/pkg/core/host"
-	"github.com/bhojpur/host/pkg/core/log"
-	"github.com/bhojpur/host/pkg/core/persist"
-	"github.com/bhojpur/host/pkg/core/state"
-	"github.com/bhojpur/host/pkg/core/swarm"
+	core "github.com/bhojpur/host/pkg/machine"
+	cengine "github.com/bhojpur/host/pkg/machine/client"
+	"github.com/bhojpur/host/pkg/machine/drivers"
+	"github.com/bhojpur/host/pkg/machine/engine"
+	"github.com/bhojpur/host/pkg/machine/host"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/machine/persist"
+	"github.com/bhojpur/host/pkg/machine/state"
+	"github.com/bhojpur/host/pkg/machine/swarm"
 	"github.com/skarademir/naturalsort"
 )
 
