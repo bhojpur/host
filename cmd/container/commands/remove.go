@@ -33,7 +33,7 @@ func RmCommand() cli.Command {
 	return cli.Command{
 		Name:      "remove",
 		ShortName: "rm",
-		Usage:     "Remove kubernetes clusters",
+		Usage:     "Remove Kubernetes clusters",
 		Action:    rmCluster,
 		Flags: []cli.Flag{
 			cli.BoolFlag{

@@ -149,9 +149,9 @@ type state struct {
 	TenantID string `json:"tenantId,omitempty"`
 
 	/**
-	Rancher Parameters
+	Bhojpur Host Parameters
 	*/
-	// DisplayName specifies cluster name displayed in Rancher UI. [optional only when creating]
+	// DisplayName specifies cluster name displayed in Bhojpur Host UI. [optional only when creating]
 	DisplayName string `json:"displayName,omitempty"`
 
 	ClusterInfo types.ClusterInfo `json:"-"`
@@ -188,7 +188,7 @@ func (d *Driver) GetDriverCreateOptions(ctx context.Context) (*types.DriverFlags
 	}
 	driverFlag.Options["name"] = &types.Flag{
 		Type:  types.StringType,
-		Usage: "The name of the 'Cluster' resource, and the internal name of the cluster in Rancher.",
+		Usage: "The name of the 'Cluster' resource, and the internal name of the cluster in Bhojpur Host.",
 	}
 
 	driverFlag.Options["aad-client-app-id"] = &types.Flag{
@@ -361,7 +361,7 @@ func (d *Driver) GetDriverCreateOptions(ctx context.Context) (*types.DriverFlags
 
 	driverFlag.Options["display-name"] = &types.Flag{
 		Type:  types.StringType,
-		Usage: "The displayed name of the cluster in the Rancher UI.",
+		Usage: "The displayed name of the cluster in the Bhojpur Host UI.",
 	}
 
 	return &driverFlag, nil

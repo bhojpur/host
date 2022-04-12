@@ -244,7 +244,7 @@ func (d *Driver) GetDriverCreateOptions(ctx context.Context) (*types.DriverFlags
 	}
 	driverFlag.Options["display-name"] = &types.Flag{
 		Type:  types.StringType,
-		Usage: "The displayed name of the cluster in the Rancher UI",
+		Usage: "The displayed name of the cluster in the Bhojpur Host UI",
 	}
 	driverFlag.Options["access-key"] = &types.Flag{
 		Type:  types.StringType,
@@ -448,7 +448,7 @@ func (state *state) validate() error {
 		// If the custom AMI ID is set, then assume they are trying to spin up in a region we don't have knowledge of
 		// and try to create anyway
 		if amiForRegion[state.Region] == "" && state.AMI == "" {
-			return fmt.Errorf("rancher does not support region %v, no entry for ami lookup", state.Region)
+			return fmt.Errorf("Bhojpur Host does not support region %v, no entry for ami lookup", state.Region)
 		}
 	}
 

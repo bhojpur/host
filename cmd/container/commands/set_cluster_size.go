@@ -39,7 +39,7 @@ func SetClusterSizeCommand() cli.Command {
 		Flags: []cli.Flag{
 			cli.StringFlag{
 				Name:  "cluster-size",
-				Usage: "The cluster-size to upgade/downgrade kubernetes to",
+				Usage: "The cluster-size to upgade/downgrade Kubernetes to",
 			},
 		},
 	}

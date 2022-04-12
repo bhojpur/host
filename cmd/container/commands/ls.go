@@ -31,7 +31,7 @@ func LsCommand() cli.Command {
 	return cli.Command{
 		Name:      "list",
 		ShortName: "ls",
-		Usage:     "list kubernetes clusters",
+		Usage:     "list Kubernetes clusters",
 		Action:    lsCluster,
 		Flags:     []cli.Flag{},
 	}

@@ -44,7 +44,7 @@ func NewClient(driverName string, addr string) (CloseableDriver, error) {
 	}, nil
 }
 
-// grpcClient defines the grpc client struct
+// grpcClient defines the gRPC client struct
 type grpcClient struct {
 	client     DriverClient
 	driverName string

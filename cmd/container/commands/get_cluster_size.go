@@ -33,7 +33,7 @@ func GetClusterSizeCommand() cli.Command {
 	return cli.Command{
 		Name:      "get-cluster-size",
 		ShortName: "gcs",
-		Usage:     "Get node count of kubernetes cluster",
+		Usage:     "Get node count of Kubernetes cluster",
 		Action:    getClusterSize,
 	}
 }

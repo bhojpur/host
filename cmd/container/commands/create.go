@@ -37,13 +37,13 @@ import (
 func CreateCommand() cli.Command {
 	return cli.Command{
 		Name:            "create",
-		Usage:           "Create a kubernetes cluster",
+		Usage:           "Create a Kubernetes cluster",
 		Action:          createWapper,
 		SkipFlagParsing: true,
 		Flags: []cli.Flag{
 			cli.StringFlag{
 				Name:  "driver",
-				Usage: "Driver to create kubernetes clusters",
+				Usage: "Driver to create Kubernetes clusters",
 			},
 		},
 	}

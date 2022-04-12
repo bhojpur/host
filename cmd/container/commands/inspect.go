@@ -32,7 +32,7 @@ import (
 
 var inspectHelpTemplate = `{{.Usage}}
 {{if .Description}}{{.Description}}{{end}}
-Usage: kontainer-engine [global options] {{.Name}} {{if .Flags}}[OPTIONS] {{end}}{{if ne "None" .ArgsUsage}}{{if ne "" .ArgsUsage}}{{.ArgsUsage}}{{else}}[cluster-name]{{end}}{{end}}
+Usage: hostfarm [global options] {{.Name}} {{if .Flags}}[OPTIONS] {{end}}{{if ne "None" .ArgsUsage}}{{if ne "" .ArgsUsage}}{{.ArgsUsage}}{{else}}[cluster-name]{{end}}{{end}}
 
 {{if .Flags}}Options:{{range .Flags}}
 	 {{.}}{{end}}{{end}}
@@ -42,7 +42,7 @@ Usage: kontainer-engine [global options] {{.Name}} {{if .Flags}}[OPTIONS] {{end}
 func InspectCommand() cli.Command {
 	return cli.Command{
 		Name:               "inspect",
-		Usage:              "inspect kubernetes clusters",
+		Usage:              "inspect Kubernetes clusters",
 		Action:             inspectCluster,
 		Flags:              []cli.Flag{},
 		CustomHelpTemplate: inspectHelpTemplate,

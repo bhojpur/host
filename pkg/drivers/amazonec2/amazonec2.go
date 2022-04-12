@@ -1335,7 +1335,7 @@ func (d *Driver) configureSecurityGroupPermissions(group *ec2.SecurityGroup) ([]
 			})
 		}
 
-		// rke2 supervisor
+		// uke supervisor
 		if _, ok := hasPortsInbound[fmt.Sprintf("%d/tcp", supervisorPort)]; !ok {
 			inboundPerms = append(inboundPerms, &ec2.IpPermission{
 				IpProtocol: aws.String("tcp"),

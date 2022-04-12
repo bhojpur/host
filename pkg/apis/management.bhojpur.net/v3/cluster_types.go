@@ -1,0 +1,415 @@
+package v3
+
+// Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+import (
+	"bytes"
+	"encoding/gob"
+	"strings"
+
+	aksv1 "github.com/bhojpur/host/pkg/apis/aks.bhojpur.net/v1"
+	eksv1 "github.com/bhojpur/host/pkg/apis/eks.bhojpur.net/v1"
+	gkev1 "github.com/bhojpur/host/pkg/apis/gke.bhojpur.net/v1"
+	"github.com/bhojpur/host/pkg/core/condition"
+	"github.com/bhojpur/host/pkg/core/types"
+	bketypes "github.com/bhojpur/host/pkg/engine/types"
+	"github.com/sirupsen/logrus"
+	v1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/version"
+)
+
+func init() {
+	gob.Register(map[string]interface{}{})
+	gob.Register([]interface{}{})
+}
+
+type ClusterConditionType string
+
+const (
+	ClusterActionGenerateKubeconfig    = "generateKubeconfig"
+	ClusterActionImportYaml            = "importYaml"
+	ClusterActionExportYaml            = "exportYaml"
+	ClusterActionViewMonitoring        = "viewMonitoring"
+	ClusterActionEditMonitoring        = "editMonitoring"
+	ClusterActionEnableMonitoring      = "enableMonitoring"
+	ClusterActionDisableMonitoring     = "disableMonitoring"
+	ClusterActionBackupEtcd            = "backupEtcd"
+	ClusterActionRestoreFromEtcdBackup = "restoreFromEtcdBackup"
+	ClusterActionRotateCertificates    = "rotateCertificates"
+	ClusterActionRotateEncryptionKey   = "rotateEncryptionKey"
+	ClusterActionRunSecurityScan       = "runSecurityScan"
+	ClusterActionSaveAsTemplate        = "saveAsTemplate"
+
+	// ClusterConditionReady Cluster ready to serve API (healthy when true, unhealthy when false)
+	ClusterConditionReady          condition.Cond = "Ready"
+	ClusterConditionPending        condition.Cond = "Pending"
+	ClusterConditionCertsGenerated condition.Cond = "CertsGenerated"
+	ClusterConditionEtcd           condition.Cond = "etcd"
+	ClusterConditionProvisioned    condition.Cond = "Provisioned"
+	ClusterConditionUpdated        condition.Cond = "Updated"
+	ClusterConditionUpgraded       condition.Cond = "Upgraded"
+	ClusterConditionWaiting        condition.Cond = "Waiting"
+	ClusterConditionRemoved        condition.Cond = "Removed"
+	// ClusterConditionNoDiskPressure true when all cluster nodes have sufficient disk
+	ClusterConditionNoDiskPressure condition.Cond = "NoDiskPressure"
+	// ClusterConditionNoMemoryPressure true when all cluster nodes have sufficient memory
+	ClusterConditionNoMemoryPressure condition.Cond = "NoMemoryPressure"
+	// ClusterConditionconditionDefaultProjectCreated true when default project has been created
+	ClusterConditionconditionDefaultProjectCreated condition.Cond = "DefaultProjectCreated"
+	// ClusterConditionconditionSystemProjectCreated true when system project has been created
+	ClusterConditionconditionSystemProjectCreated condition.Cond = "SystemProjectCreated"
+	// Deprecated: ClusterConditionDefaultNamespaceAssigned true when cluster's default namespace has been initially assigned
+	ClusterConditionDefaultNamespaceAssigned condition.Cond = "DefaultNamespaceAssigned"
+	// Deprecated: ClusterConditionSystemNamespacesAssigned true when cluster's system namespaces has been initially assigned to
+	// a system project
+	ClusterConditionSystemNamespacesAssigned   condition.Cond = "SystemNamespacesAssigned"
+	ClusterConditionAddonDeploy                condition.Cond = "AddonDeploy"
+	ClusterConditionSystemAccountCreated       condition.Cond = "SystemAccountCreated"
+	ClusterConditionAgentDeployed              condition.Cond = "AgentDeployed"
+	ClusterConditionGlobalAdminsSynced         condition.Cond = "GlobalAdminsSynced"
+	ClusterConditionInitialRolesPopulated      condition.Cond = "InitialRolesPopulated"
+	ClusterConditionServiceAccountMigrated     condition.Cond = "ServiceAccountMigrated"
+	ClusterConditionPrometheusOperatorDeployed condition.Cond = "PrometheusOperatorDeployed"
+	ClusterConditionMonitoringEnabled          condition.Cond = "MonitoringEnabled"
+	ClusterConditionAlertingEnabled            condition.Cond = "AlertingEnabled"
+	ClusterConditionSecretsMigrated            condition.Cond = "SecretsMigrated"
+
+	ClusterDriverImported = "imported"
+	ClusterDriverLocal    = "local"
+	ClusterDriverBKE      = "bhojpurKubernetesEngine"
+	ClusterDriverDCP      = "dcp"
+	ClusterDriverUOS      = "uos"
+	ClusterDriverUKE      = "uke"
+	ClusterDriverAKS      = "AKS"
+	ClusterDriverEKS      = "EKS"
+	ClusterDriverGKE      = "GKE"
+	ClusterDriverBhojpurD = "bhojpurd"
+)
+
+// +genclient
+// +genclient:nonNamespaced
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+type Cluster struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object’s metadata. More info:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	// Specification of the desired behavior of the the cluster. More info:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+	Spec ClusterSpec `json:"spec"`
+	// Most recent observed status of the cluster. More info:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+	Status ClusterStatus `json:"status"`
+}
+
+type ClusterSpecBase struct {
+	DesiredAgentImage                    string                                  `json:"desiredAgentImage"`
+	DesiredAuthImage                     string                                  `json:"desiredAuthImage"`
+	AgentImageOverride                   string                                  `json:"agentImageOverride"`
+	AgentEnvVars                         []v1.EnvVar                             `json:"agentEnvVars,omitempty"`
+	BhojpurKubernetesEngineConfig        *bketypes.BhojpurKubernetesEngineConfig `json:"bhojpurKubernetesEngineConfig,omitempty"`
+	DefaultPodSecurityPolicyTemplateName string                                  `json:"defaultPodSecurityPolicyTemplateName,omitempty" bhojpur:"type=reference[podSecurityPolicyTemplate]"`
+	DefaultClusterRoleForProjectMembers  string                                  `json:"defaultClusterRoleForProjectMembers,omitempty" bhojpur:"type=reference[roleTemplate]"`
+	DockerRootDir                        string                                  `json:"dockerRootDir,omitempty" bhojpur:"default=/var/lib/docker"`
+	EnableNetworkPolicy                  *bool                                   `json:"enableNetworkPolicy" bhojpur:"default=false"`
+	EnableClusterAlerting                bool                                    `json:"enableClusterAlerting" bhojpur:"default=false"`
+	EnableClusterMonitoring              bool                                    `json:"enableClusterMonitoring" bhojpur:"default=false"`
+	WindowsPreferedCluster               bool                                    `json:"windowsPreferedCluster" bhojpur:"noupdate"`
+	LocalClusterAuthEndpoint             LocalClusterAuthEndpoint                `json:"localClusterAuthEndpoint,omitempty"`
+	ScheduledClusterScan                 *ScheduledClusterScan                   `json:"scheduledClusterScan,omitempty"`
+}
+
+type ClusterSpec struct {
+	ClusterSpecBase
+	DisplayName                         string                      `json:"displayName" bhojpur:"required"`
+	Description                         string                      `json:"description"`
+	Internal                            bool                        `json:"internal" bhojpur:"nocreate,noupdate"`
+	DcpConfig                           *DcpConfig                  `json:"dcpConfig,omitempty"`
+	UkeConfig                           *UkeConfig                  `json:"ukeConfig,omitempty"`
+	ImportedConfig                      *ImportedConfig             `json:"importedConfig,omitempty" bhojpur:"nocreate,noupdate"`
+	GoogleKubernetesEngineConfig        *MapStringInterface         `json:"googleKubernetesEngineConfig,omitempty"`
+	AzureKubernetesServiceConfig        *MapStringInterface         `json:"azureKubernetesServiceConfig,omitempty"`
+	AmazonElasticContainerServiceConfig *MapStringInterface         `json:"amazonElasticContainerServiceConfig,omitempty"`
+	GenericEngineConfig                 *MapStringInterface         `json:"genericEngineConfig,omitempty"`
+	AKSConfig                           *aksv1.AKSClusterConfigSpec `json:"aksConfig,omitempty"`
+	EKSConfig                           *eksv1.EKSClusterConfigSpec `json:"eksConfig,omitempty"`
+	GKEConfig                           *gkev1.GKEClusterConfigSpec `json:"gkeConfig,omitempty"`
+	ClusterTemplateName                 string                      `json:"clusterTemplateName,omitempty" bhojpur:"type=reference[clusterTemplate],nocreate,noupdate"`
+	ClusterTemplateRevisionName         string                      `json:"clusterTemplateRevisionName,omitempty" bhojpur:"type=reference[clusterTemplateRevision]"`
+	ClusterTemplateAnswers              Answer                      `json:"answers,omitempty"`
+	ClusterTemplateQuestions            []Question                  `json:"questions,omitempty" bhojpur:"nocreate,noupdate"`
+	FleetWorkspaceName                  string                      `json:"fleetWorkspaceName,omitempty"`
+}
+
+type ImportedConfig struct {
+	KubeConfig string `json:"kubeConfig" bhojpur:"type=password"`
+}
+
+type ClusterStatus struct {
+	// Conditions represent the latest available observations of an object's current state:
+	// More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#typical-status-properties
+	Conditions []ClusterCondition `json:"conditions,omitempty"`
+	// Component statuses will represent cluster's components (etcd/controller/scheduler) health
+	// https://kubernetes.io/docs/api-reference/v1.8/#componentstatus-v1-core
+	Driver                               string                      `json:"driver"`
+	Provider                             string                      `json:"provider"`
+	AgentImage                           string                      `json:"agentImage"`
+	AppliedAgentEnvVars                  []v1.EnvVar                 `json:"appliedAgentEnvVars,omitempty"`
+	AgentFeatures                        map[string]bool             `json:"agentFeatures,omitempty"`
+	AuthImage                            string                      `json:"authImage"`
+	ComponentStatuses                    []ClusterComponentStatus    `json:"componentStatuses,omitempty"`
+	APIEndpoint                          string                      `json:"apiEndpoint,omitempty"`
+	ServiceAccountToken                  string                      `json:"serviceAccountToken,omitempty"`
+	CACert                               string                      `json:"caCert,omitempty"`
+	Capacity                             v1.ResourceList             `json:"capacity,omitempty"`
+	Allocatable                          v1.ResourceList             `json:"allocatable,omitempty"`
+	AppliedSpec                          ClusterSpec                 `json:"appliedSpec,omitempty"`
+	FailedSpec                           *ClusterSpec                `json:"failedSpec,omitempty"`
+	Requested                            v1.ResourceList             `json:"requested,omitempty"`
+	Limits                               v1.ResourceList             `json:"limits,omitempty"`
+	Version                              *version.Info               `json:"version,omitempty"`
+	AppliedPodSecurityPolicyTemplateName string                      `json:"appliedPodSecurityPolicyTemplateId"`
+	AppliedEnableNetworkPolicy           bool                        `json:"appliedEnableNetworkPolicy" bhojpur:"nocreate,noupdate,default=false"`
+	Capabilities                         Capabilities                `json:"capabilities,omitempty"`
+	MonitoringStatus                     *MonitoringStatus           `json:"monitoringStatus,omitempty" bhojpur:"nocreate,noupdate"`
+	NodeVersion                          int                         `json:"nodeVersion,omitempty"`
+	NodeCount                            int                         `json:"nodeCount,omitempty" bhojpur:"nocreate,noupdate"`
+	LinuxWorkerCount                     int                         `json:"linuxWorkerCount,omitempty" bhojpur:"nocreate,noupdate"`
+	WindowsWorkerCount                   int                         `json:"windowsWorkerCount,omitempty" bhojpur:"nocreate,noupdate"`
+	IstioEnabled                         bool                        `json:"istioEnabled,omitempty" bhojpur:"nocreate,noupdate,default=false"`
+	CertificatesExpiration               map[string]CertExpiration   `json:"certificatesExpiration,omitempty"`
+	ScheduledClusterScanStatus           *ScheduledClusterScanStatus `json:"scheduledClusterScanStatus,omitempty"`
+	CurrentCisRunName                    string                      `json:"currentCisRunName,omitempty"`
+	AKSStatus                            AKSStatus                   `json:"aksStatus,omitempty" bhojpur:"nocreate,noupdate"`
+	EKSStatus                            EKSStatus                   `json:"eksStatus,omitempty" bhojpur:"nocreate,noupdate"`
+	GKEStatus                            GKEStatus                   `json:"gkeStatus,omitempty" bhojpur:"nocreate,noupdate"`
+	PrivateRegistrySecret                string                      `json:"privateRegistrySecret,omitempty" bhojpur:"nocreate,noupdate"`
+	S3CredentialSecret                   string                      `json:"s3CredentialSecret,omitempty" bhojpur:"nocreate,noupdate"`
+	WeavePasswordSecret                  string                      `json:"weavePasswordSecret,omitempty" bhojpur:"nocreate,noupdate"`
+	VsphereSecret                        string                      `json:"vsphereSecret,omitempty" bhojpur:"nocreate,noupdate"`
+	VirtualCenterSecret                  string                      `json:"virtualCenterSecret,omitempty" bhojpur:"nocreate,noupdate"`
+	OpenStackSecret                      string                      `json:"openStackSecret,omitempty" bhojpur:"nocreate,noupdate"`
+	AADClientSecret                      string                      `json:"aadClientSecret,omitempty" bhojpur:"nocreate,noupdate"`
+	AADClientCertSecret                  string                      `json:"aadClientCertSecret,omitempty" bhojpur:"nocreate,noupdate"`
+}
+
+type ClusterComponentStatus struct {
+	Name       string                  `json:"name"`
+	Conditions []v1.ComponentCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,2,rep,name=conditions"`
+}
+
+type ClusterCondition struct {
+	// Type of cluster condition.
+	Type ClusterConditionType `json:"type"`
+	// Status of the condition, one of True, False, Unknown.
+	Status v1.ConditionStatus `json:"status"`
+	// The last time this condition was updated.
+	LastUpdateTime string `json:"lastUpdateTime,omitempty"`
+	// Last time the condition transitioned from one status to another.
+	LastTransitionTime string `json:"lastTransitionTime,omitempty"`
+	// The reason for the condition's last transition.
+	Reason string `json:"reason,omitempty"`
+	// Human-readable message indicating details about last transition
+	Message string `json:"message,omitempty"`
+}
+
+type MapStringInterface map[string]interface{}
+
+func (m *MapStringInterface) DeepCopy() *MapStringInterface {
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
+	dec := gob.NewDecoder(&buf)
+	err := enc.Encode(m)
+	if err != nil {
+		logrus.Errorf("error while deep copying MapStringInterface %v", err)
+		return nil
+	}
+
+	var copy MapStringInterface
+	err = dec.Decode(&copy)
+	if err != nil {
+		logrus.Errorf("error while deep copying MapStringInterface %v", err)
+		return nil
+	}
+
+	return &copy
+}
+
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+type ClusterRegistrationToken struct {
+	types.Namespaced
+
+	metav1.TypeMeta `json:",inline"`
+	// Standard object’s metadata. More info:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	// Specification of the desired behavior of the the cluster. More info:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+	Spec ClusterRegistrationTokenSpec `json:"spec"`
+	// Most recent observed status of the cluster. More info:
+	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+	Status ClusterRegistrationTokenStatus `json:"status"`
+}
+
+func (c *ClusterRegistrationToken) ObjClusterName() string {
+	return c.Spec.ObjClusterName()
+}
+
+type ClusterRegistrationTokenSpec struct {
+	ClusterName string `json:"clusterName" bhojpur:"required,type=reference[cluster]"`
+}
+
+func (c *ClusterRegistrationTokenSpec) ObjClusterName() string {
+	return c.ClusterName
+}
+
+type ClusterRegistrationTokenStatus struct {
+	InsecureCommand            string `json:"insecureCommand"`
+	Command                    string `json:"command"`
+	WindowsNodeCommand         string `json:"windowsNodeCommand"`
+	InsecureWindowsNodeCommand string `json:"insecureWindowsNodeCommand"`
+	NodeCommand                string `json:"nodeCommand"`
+	InsecureNodeCommand        string `json:"insecureNodeCommand"`
+	ManifestURL                string `json:"manifestUrl"`
+	Token                      string `json:"token"`
+}
+
+type GenerateKubeConfigOutput struct {
+	Config string `json:"config"`
+}
+
+type ExportOutput struct {
+	YAMLOutput string `json:"yamlOutput"`
+}
+
+type ImportClusterYamlInput struct {
+	YAML             string `json:"yaml,omitempty"`
+	DefaultNamespace string `json:"defaultNamespace,omitempty"`
+	Namespace        string `json:"namespace,omitempty"`
+	ProjectName      string `json:"projectName,omitempty" bhojpur:"type=reference[project]"`
+}
+
+func (i *ImportClusterYamlInput) ObjClusterName() string {
+	if parts := strings.SplitN(i.ProjectName, ":", 2); len(parts) == 2 {
+		return parts[0]
+	}
+	return ""
+}
+
+type ImportYamlOutput struct {
+	Message string `json:"message,omitempty"`
+}
+
+type Capabilities struct {
+	LoadBalancerCapabilities LoadBalancerCapabilities `json:"loadBalancerCapabilities,omitempty"`
+	IngressCapabilities      []IngressCapabilities    `json:"ingressCapabilities,omitempty"`
+	NodePoolScalingSupported bool                     `json:"nodePoolScalingSupported,omitempty"`
+	NodePortRange            string                   `json:"nodePortRange,omitempty"`
+	TaintSupport             *bool                    `json:"taintSupport,omitempty"`
+	PspEnabled               bool                     `json:"pspEnabled,omitempty"`
+}
+
+type LoadBalancerCapabilities struct {
+	Enabled              *bool    `json:"enabled,omitempty"`
+	Provider             string   `json:"provider,omitempty"`
+	ProtocolsSupported   []string `json:"protocolsSupported,omitempty"`
+	HealthCheckSupported bool     `json:"healthCheckSupported,omitempty"`
+}
+
+type IngressCapabilities struct {
+	IngressProvider      string `json:"ingressProvider,omitempty"`
+	CustomDefaultBackend *bool  `json:"customDefaultBackend,omitempty"`
+}
+
+type MonitoringInput struct {
+	Version          string            `json:"version,omitempty"`
+	Answers          map[string]string `json:"answers,omitempty"`
+	AnswersSetString map[string]string `json:"answersSetString,omitempty"`
+}
+
+type MonitoringOutput struct {
+	Version          string            `json:"version,omitempty"`
+	Answers          map[string]string `json:"answers,omitempty"`
+	AnswersSetString map[string]string `json:"answersSetString,omitempty"`
+}
+
+type RestoreFromEtcdBackupInput struct {
+	EtcdBackupName   string `json:"etcdBackupName,omitempty" bhojpur:"type=reference[etcdBackup]"`
+	RestoreBkeConfig string `json:"restoreBkeConfig,omitempty"`
+}
+
+type RotateCertificateInput struct {
+	CACertificates bool     `json:"caCertificates,omitempty"`
+	Services       []string `json:"services,omitempty" bhojpur:"type=enum,options=etcd|kubelet|kube-apiserver|kube-proxy|kube-scheduler|kube-controller-manager"`
+}
+
+type RotateCertificateOutput struct {
+	Message string `json:"message,omitempty"`
+}
+
+type RotateEncryptionKeyOutput struct {
+	Message string `json:"message,omitempty"`
+}
+
+type LocalClusterAuthEndpoint struct {
+	Enabled bool   `json:"enabled"`
+	FQDN    string `json:"fqdn,omitempty"`
+	CACerts string `json:"caCerts,omitempty"`
+}
+
+type CertExpiration struct {
+	ExpirationDate string `json:"expirationDate,omitempty"`
+}
+
+type SaveAsTemplateInput struct {
+	ClusterTemplateName         string `json:"clusterTemplateName,omitempty"`
+	ClusterTemplateRevisionName string `json:"clusterTemplateRevisionName,omitempty"`
+}
+
+type SaveAsTemplateOutput struct {
+	ClusterTemplateName         string `json:"clusterTemplateName,omitempty"`
+	ClusterTemplateRevisionName string `json:"clusterTemplateRevisionName,omitempty"`
+}
+
+type AKSStatus struct {
+	UpstreamSpec          *aksv1.AKSClusterConfigSpec `json:"upstreamSpec"`
+	PrivateRequiresTunnel *bool                       `json:"privateRequiresTunnel"`
+	RBACEnabled           *bool                       `json:"rbacEnabled"`
+}
+
+type EKSStatus struct {
+	UpstreamSpec                  *eksv1.EKSClusterConfigSpec `json:"upstreamSpec"`
+	VirtualNetwork                string                      `json:"virtualNetwork"`
+	Subnets                       []string                    `json:"subnets"`
+	SecurityGroups                []string                    `json:"securityGroups"`
+	PrivateRequiresTunnel         *bool                       `json:"privateRequiresTunnel"`
+	ManagedLaunchTemplateID       string                      `json:"managedLaunchTemplateID"`
+	ManagedLaunchTemplateVersions map[string]string           `json:"managedLaunchTemplateVersions"`
+}
+
+type GKEStatus struct {
+	UpstreamSpec          *gkev1.GKEClusterConfigSpec `json:"upstreamSpec"`
+	PrivateRequiresTunnel *bool                       `json:"privateRequiresTunnel"`
+}

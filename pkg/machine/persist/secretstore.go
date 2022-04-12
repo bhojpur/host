@@ -173,7 +173,7 @@ func (s *secretStore) addDirToArchive(tarfileWriter *tar.Writer) error {
 func (s *secretStore) loadSecret() (*v1.Secret, error) {
 	secret, err := s.SecretClient.Get(context.Background(), s.SecretName, metav1.GetOptions{})
 	if err != nil {
-		return nil, fmt.Errorf("error getting secret from kubernetes: %v", err)
+		return nil, fmt.Errorf("error getting secret from Kubernetes: %v", err)
 	}
 
 	return secret, nil
@@ -182,7 +182,7 @@ func (s *secretStore) loadSecret() (*v1.Secret, error) {
 func (s *secretStore) extractConfig() error {
 	secret, err := s.loadSecret()
 	if err != nil {
-		return fmt.Errorf("error getting secret from kubernetes: %v", err)
+		return fmt.Errorf("error getting secret from Kubernetes: %v", err)
 	}
 
 	extractedConfig, ok := secret.Data[machineConfigSecretKey]

@@ -145,7 +145,7 @@ func (d *Driver) GetDriverCreateOptions(ctx context.Context) (*types.DriverFlags
 	}
 	driverFlag.Options["name"] = &types.Flag{
 		Type:  types.StringType,
-		Usage: "the internal name of the cluster in Rancher",
+		Usage: "the internal name of the cluster in Bhojpur Host",
 	}
 	driverFlag.Options["display-name"] = &types.Flag{
 		Type:  types.StringType,

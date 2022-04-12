@@ -44,11 +44,11 @@ const (
 )
 
 var (
-	// ErrClusterExists This error is checked in rancher, don't change the string
+	// ErrClusterExists This error is checked in Bhojpur Host, don't change the string
 	ErrClusterExists = errors2.New("cluster already exists")
 )
 
-// Cluster represents a kubernetes cluster
+// Cluster represents a Kubernetes cluster
 type Cluster struct {
 	// The cluster driver to provision cluster
 	Driver types.CloseableDriver `json:"-"`
@@ -59,10 +59,10 @@ type Cluster struct {
 	// The status of the cluster
 	Status string `json:"status,omitempty" yaml:"status,omitempty"`
 
-	// specific info about kubernetes cluster
+	// specific info about Kubernetes cluster
 	// Kubernetes cluster version
 	Version string `json:"version,omitempty" yaml:"version,omitempty"`
-	// Service account token to access kubernetes API
+	// Service account token to access Kubernetes API
 	ServiceAccountToken string `json:"serviceAccountToken,omitempty" yaml:"service_account_token,omitempty"`
 	// Kubernetes API master endpoint
 	Endpoint string `json:"endpoint,omitempty" yaml:"endpoint,omitempty"`

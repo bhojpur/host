@@ -49,7 +49,7 @@ Run '{{.Name}} COMMAND --help' for more information on a command.
 
 var commandHelpTemplate = `{{.Usage}}
 {{if .Description}}{{.Description}}{{end}}
-Usage: kontainer-engine [global options] {{.Name}} {{if .Flags}}[OPTIONS] {{end}}{{if ne "None" .ArgsUsage}}{{if ne "" .ArgsUsage}}{{.ArgsUsage}}{{else}}[arg...]{{end}}{{end}}
+Usage: hostfarm [global options] {{.Name}} {{if .Flags}}[OPTIONS] {{end}}{{if ne "None" .ArgsUsage}}{{if ne "" .ArgsUsage}}{{.ArgsUsage}}{{else}}[arg...]{{end}}{{end}}
 
 {{if .Flags}}Options:{{range .Flags}}
 	 {{.}}{{end}}{{end}}

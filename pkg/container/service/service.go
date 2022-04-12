@@ -34,15 +34,14 @@ import (
 	"syscall"
 	"time"
 
+	v3 "github.com/bhojpur/host/pkg/apis/management.bhojpur.net/v3"
 	"github.com/bhojpur/host/pkg/container/cluster"
 	"github.com/bhojpur/host/pkg/container/drivers/aks"
 	"github.com/bhojpur/host/pkg/container/drivers/eks"
 	"github.com/bhojpur/host/pkg/container/drivers/gke"
 	kubeimport "github.com/bhojpur/host/pkg/container/drivers/import"
-	"github.com/bhojpur/host/pkg/container/drivers/rke"
 	"github.com/bhojpur/host/pkg/container/types"
 	"github.com/pkg/errors"
-	v3 "github.com/rancher/types/apis/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
@@ -54,7 +53,6 @@ var (
 		AzureKubernetesServiceDriverName:        aks.NewDriver(),
 		AmazonElasticContainerServiceDriverName: eks.NewDriver(),
 		ImportDriverName:                        kubeimport.NewDriver(),
-		RancherKubernetesEngineDriverName:       rke.NewDriver(),
 	}
 )
 
@@ -64,7 +62,7 @@ const (
 	AzureKubernetesServiceDriverName        = "azurekubernetesservice"
 	AmazonElasticContainerServiceDriverName = "amazonelasticcontainerservice"
 	ImportDriverName                        = "import"
-	RancherKubernetesEngineDriverName       = "rancherkubernetesengine"
+	BhojpurKubernetesEngineDriverName       = "bhojpurkubernetesengine"
 )
 
 type controllerConfigGetter struct {
@@ -89,12 +87,6 @@ func (c controllerConfigGetter) GetConfig() (types.DriverOptions, error) {
 		}
 		data = config
 		flatten(data, &driverOptions)
-	case RancherKubernetesEngineDriverName:
-		config, err := yaml.Marshal(c.clusterSpec.RancherKubernetesEngineConfig)
-		if err != nil {
-			return driverOptions, err
-		}
-		driverOptions.StringOptions["rkeConfig"] = string(config)
 	default:
 		config, err := toMap(c.clusterSpec.GenericEngineConfig, "json")
 		if err != nil {
@@ -200,8 +192,8 @@ func (e *EngineService) convertCluster(name string, listenAddr string, spec v3.C
 	driverName := ""
 	if spec.ImportedConfig != nil {
 		driverName = ImportDriverName
-	} else if spec.RancherKubernetesEngineConfig != nil {
-		driverName = RancherKubernetesEngineDriverName
+	} else if spec.BhojpurKubernetesEngineConfig != nil {
+		driverName = BhojpurKubernetesEngineDriverName
 	} else if spec.GenericEngineConfig != nil {
 		driverName = (*spec.GenericEngineConfig)["driverName"].(string)
 		if driverName == "" {
@@ -241,8 +233,8 @@ func (e *EngineService) convertCluster(name string, listenAddr string, spec v3.C
 }
 
 // Create creates the stub for cluster manager to call
-func (e *EngineService) Create(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (string, string, string, error) {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+func (e *EngineService) Create(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (string, string, string, error) {
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return "", "", "", err
 	}
@@ -271,17 +263,17 @@ func (e *EngineService) Create(ctx context.Context, name string, kontainerDriver
 	return endpoint, cls.ServiceAccountToken, cls.RootCACert, nil
 }
 
-func (e *EngineService) getRunningDriver(kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (*RunningDriver, error) {
+func (e *EngineService) getRunningDriver(hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (*RunningDriver, error) {
 	return &RunningDriver{
-		Name:    kontainerDriver.Name,
-		Builtin: kontainerDriver.Spec.BuiltIn,
-		Path:    kontainerDriver.Status.ExecutablePath,
+		Name:    hostfarmDriver.Name,
+		Builtin: hostfarmDriver.Spec.BuiltIn,
+		Path:    hostfarmDriver.Status.ExecutablePath,
 	}, nil
 }
 
 // Update creates the stub for cluster manager to call
-func (e *EngineService) Update(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (string, string, string, error) {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+func (e *EngineService) Update(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (string, string, string, error) {
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return "", "", "", err
 	}
@@ -311,8 +303,8 @@ func (e *EngineService) Update(ctx context.Context, name string, kontainerDriver
 }
 
 // Remove removes stub for cluster manager to call
-func (e *EngineService) Remove(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec, forceRemove bool) error {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+func (e *EngineService) Remove(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec, forceRemove bool) error {
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return err
 	}
@@ -334,9 +326,9 @@ func (e *EngineService) Remove(ctx context.Context, name string, kontainerDriver
 	return cls.Remove(ctx, forceRemove)
 }
 
-func (e *EngineService) GetDriverCreateOptions(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (*types.DriverFlags,
+func (e *EngineService) GetDriverCreateOptions(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (*types.DriverFlags,
 	error) {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return nil, err
 	}
@@ -358,9 +350,9 @@ func (e *EngineService) GetDriverCreateOptions(ctx context.Context, name string,
 	return cls.GetDriverCreateOptions(ctx)
 }
 
-func (e *EngineService) GetDriverUpdateOptions(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (*types.DriverFlags,
+func (e *EngineService) GetDriverUpdateOptions(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (*types.DriverFlags,
 	error) {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return nil, err
 	}
@@ -382,9 +374,9 @@ func (e *EngineService) GetDriverUpdateOptions(ctx context.Context, name string,
 	return cls.GetDriverUpdateOptions(ctx)
 }
 
-func (e *EngineService) GetK8sCapabilities(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver,
+func (e *EngineService) GetK8sCapabilities(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver,
 	clusterSpec v3.ClusterSpec) (*types.K8SCapabilities, error) {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return nil, err
 	}
@@ -463,7 +455,7 @@ func (r *RunningDriver) Start() (string, error) {
 
 		cmd := exec.CommandContext(processContext, r.Path, port)
 
-		if os.Getenv("CATTLE_DEV_MODE") == "" {
+		if os.Getenv("BHOJPUR_DEV_MODE") == "" {
 			cred, err := getUserCred()
 			if err != nil {
 				return "", errors.WithMessage(err, "get user cred error")
@@ -489,7 +481,7 @@ func (r *RunningDriver) Start() (string, error) {
 		r.listenAddress = listenAddress
 	}
 
-	logrus.Infof("kontainerdriver %v listening on address %v", r.Name, r.listenAddress)
+	logrus.Infof("Bhojpur Host farm driver %v listening on address %v", r.Name, r.listenAddress)
 
 	return r.listenAddress, nil
 }
@@ -522,11 +514,11 @@ func (r *RunningDriver) Stop() {
 		r.cancel()
 	}
 
-	logrus.Infof("kontainerdriver %v stopped", r.Name)
+	logrus.Infof("Bhojpur Host farm driver %v stopped", r.Name)
 }
 
-func (e *EngineService) ETCDSave(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec, snapshotName string) error {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+func (e *EngineService) ETCDSave(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec, snapshotName string) error {
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return err
 	}
@@ -546,8 +538,8 @@ func (e *EngineService) ETCDSave(ctx context.Context, name string, kontainerDriv
 	return cls.ETCDSave(ctx, snapshotName)
 }
 
-func (e *EngineService) ETCDRestore(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec, backup string) (string, string, string, error) {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+func (e *EngineService) ETCDRestore(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec, backup string) (string, string, string, error) {
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return "", "", "", err
 	}
@@ -576,8 +568,8 @@ func (e *EngineService) ETCDRestore(ctx context.Context, name string, kontainerD
 
 }
 
-func (e *EngineService) ETCDRemoveSnapshot(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec, snapshotName string) error {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+func (e *EngineService) ETCDRemoveSnapshot(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec, snapshotName string) error {
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return err
 	}
@@ -597,8 +589,8 @@ func (e *EngineService) ETCDRemoveSnapshot(ctx context.Context, name string, kon
 	return cls.ETCDRemoveSnapshot(ctx, snapshotName)
 }
 
-func (e *EngineService) GenerateServiceAccount(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (string, error) {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+func (e *EngineService) GenerateServiceAccount(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) (string, error) {
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return "", err
 	}
@@ -623,8 +615,8 @@ func (e *EngineService) GenerateServiceAccount(ctx context.Context, name string,
 	return cls.ServiceAccountToken, nil
 }
 
-func (e *EngineService) RemoveLegacyServiceAccount(ctx context.Context, name string, kontainerDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) error {
-	runningDriver, err := e.getRunningDriver(kontainerDriver, clusterSpec)
+func (e *EngineService) RemoveLegacyServiceAccount(ctx context.Context, name string, hostfarmDriver *v3.KontainerDriver, clusterSpec v3.ClusterSpec) error {
+	runningDriver, err := e.getRunningDriver(hostfarmDriver, clusterSpec)
 	if err != nil {
 		return err
 	}
@@ -671,7 +663,7 @@ func getUserCred() (*syscall.Credential, error) {
 }
 
 func whitelistEnvvars(envvars []string) []string {
-	wl := os.Getenv("CATTLE_KONTAINER_ENGINE_WHITELIST_ENVVARS")
+	wl := os.Getenv("BHOJPUR_HOSTFARM_ENGINE_WHITELIST_ENVVARS")
 	envWhiteList := strings.Split(wl, ",")
 
 	if len(envWhiteList) == 0 {

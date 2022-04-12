@@ -33,7 +33,7 @@ import (
 
 var updateHelpTmeplate = `{{.Usage}}
 {{if .Description}}{{.Description}}{{end}}
-Usage: kontainer-engine [global option] {{.Name}} {{if .Flags}}[OPTIONS] {{end}}{{if ne "None" .ArgsUsage}}{{if ne "" .ArgsUsage}}{{.ArgsUsage}}{{else}}[cluster-name]{{end}}{{end}}
+Usage: hostfarm [global option] {{.Name}} {{if .Flags}}[OPTIONS] {{end}}{{if ne "None" .ArgsUsage}}{{if ne "" .ArgsUsage}}{{.ArgsUsage}}{{else}}[cluster-name]{{end}}{{end}}
 
 {{if .Flags}}Options:{{range .Flags}}
 	 {{.}}{{end}}{{end}}
@@ -43,7 +43,7 @@ Usage: kontainer-engine [global option] {{.Name}} {{if .Flags}}[OPTIONS] {{end}}
 func UpdateCommand() cli.Command {
 	return cli.Command{
 		Name:               "update",
-		Usage:              "update kubernetes clusters",
+		Usage:              "update Kubernetes clusters",
 		Action:             updateWrapper,
 		SkipFlagParsing:    true,
 		CustomHelpTemplate: updateHelpTmeplate,
@@ -98,7 +98,7 @@ func updateCluster(ctx *cli.Context) error {
 	if name == "" {
 		return errors.New("name is required when inspecting cluster")
 	} else if name == "--help" {
-		// in case of `./kontainer-engine update cluster1 --help`
+		// in case of `./hostfarm update cluster1 --help`
 		return cli.ShowCommandHelp(ctx, "update")
 	}
 	clusters, err := store.GetAllClusterFromStore()

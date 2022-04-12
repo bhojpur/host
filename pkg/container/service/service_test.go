@@ -24,8 +24,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/bhojpur/host/pkg/container/types"
-	v3 "github.com/rancher/types/apis/management.cattle.io/v3"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/check.v1"
 )
@@ -60,55 +58,6 @@ func newTestCase(input string, expectedVal string, isErr bool) testCase {
 		expectedVal: expectedVal,
 		expectedErr: expectedErr,
 	}
-}
-
-func (s *StubTestSuite) TestFlatten(c *check.C) {
-	config := v3.MapStringInterface{
-		"projectId":  "test",
-		"zone":       "test",
-		"diskSizeGb": 50,
-		"labels": map[string]string{
-			"foo": "bar",
-		},
-		"enableAlphaFeature": true,
-		"masterVersion":      "1.7.1",
-		"nodeVersion":        "1.7.1",
-		"nodeCount":          3,
-	}
-	opts, err := toMap(config, "json")
-	if err != nil {
-		c.Fatal(err)
-	}
-	driverOptions := types.DriverOptions{
-		BoolOptions:        make(map[string]bool),
-		StringOptions:      make(map[string]string),
-		IntOptions:         make(map[string]int64),
-		StringSliceOptions: make(map[string]*types.StringSlice),
-	}
-	flatten(opts, &driverOptions)
-	fmt.Println(driverOptions)
-	boolResult := map[string]bool{
-		"enableAlphaFeature": true,
-	}
-	stringResult := map[string]string{
-		"projectId":     "test",
-		"zone":          "test",
-		"masterVersion": "1.7.1",
-		"nodeVersion":   "1.7.1",
-	}
-	intResult := map[string]int64{
-		"diskSizeGb": 50,
-		"nodeCount":  3,
-	}
-	stringSliceResult := map[string]types.StringSlice{
-		"labels": {
-			Value: []string{"foo=bar"},
-		},
-	}
-	c.Assert(driverOptions.BoolOptions, check.DeepEquals, boolResult)
-	c.Assert(driverOptions.IntOptions, check.DeepEquals, intResult)
-	c.Assert(driverOptions.StringOptions, check.DeepEquals, stringResult)
-	c.Assert(driverOptions.StringSliceOptions["labels"].Value, check.DeepEquals, stringSliceResult["labels"].Value)
 }
 
 func TestPortOnly(t *testing.T) {
