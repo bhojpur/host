@@ -137,7 +137,7 @@ func (c *Cluster) getBackupHosts() []*hosts.Host {
 	return backupHosts
 }
 
-func RotateRKECertificates(ctx context.Context, c *Cluster, flags ExternalFlags, clusterState *FullState) error {
+func RotateBKECertificates(ctx context.Context, c *Cluster, flags ExternalFlags, clusterState *FullState) error {
 	var (
 		serviceAccountTokenKey string
 	)

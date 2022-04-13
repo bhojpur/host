@@ -22,5 +22,4 @@
 
 // +k8s:deepcopy-gen=package
 // +groupName=fleet.bhojpur.net
-
 package v1alpha1

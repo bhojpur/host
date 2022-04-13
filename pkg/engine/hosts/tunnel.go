@@ -42,7 +42,7 @@ func (h *Host) TunnelUp(ctx context.Context, dialerFactory DialerFactory, cluste
 	if h.DClient != nil {
 		return nil
 	}
-	log.Infof(ctx, "[dialer] Setup tunnel for host [%s]", h.Address)
+	log.Infof(ctx, "[dialer] Setup tunnel for Bhojpur Host [%s]", h.Address)
 	httpClient, err := h.newHTTPClient(dialerFactory)
 	if err != nil {
 		return fmt.Errorf("Can't establish dialer connection: %v", err)
@@ -68,7 +68,7 @@ func (h *Host) TunnelUpLocal(ctx context.Context, clusterVersion string) error {
 		return nil
 	}
 	// set Docker client
-	logrus.Debugf("Connecting to Docker API for host [%s]", h.Address)
+	logrus.Debugf("Connecting to Docker API for Bhojpur Host [%s]", h.Address)
 	h.DClient, err = client.NewEnvClient()
 	if err != nil {
 		return fmt.Errorf("Can't initiate NewClient: %v", err)
@@ -81,7 +81,7 @@ func checkDockerVersion(ctx context.Context, h *Host, clusterVersion string) err
 	if err != nil {
 		return fmt.Errorf("Can't retrieve Docker Info: %v", err)
 	}
-	logrus.Debugf("Docker Info found for host [%s]: %#v", h.Address, info)
+	logrus.Debugf("Docker Info found for Bhojpur Host [%s]: %#v", h.Address, info)
 	h.DockerInfo = info
 	if h.IgnoreDockerVersion {
 		return nil
@@ -97,7 +97,7 @@ func checkDockerVersion(ctx context.Context, h *Host, clusterVersion string) err
 	}
 
 	if !isvalid {
-		return fmt.Errorf("Unsupported Docker version found [%s] on host [%s], supported versions are %v", info.ServerVersion, h.Address, metadata.K8sVersionToDockerVersions[K8sVersion])
+		return fmt.Errorf("Unsupported Docker version found [%s] on Bhojpur Host [%s], supported versions are %v", info.ServerVersion, h.Address, metadata.K8sVersionToDockerVersions[K8sVersion])
 	}
 	return nil
 }

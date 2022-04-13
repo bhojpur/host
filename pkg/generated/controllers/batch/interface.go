@@ -23,8 +23,8 @@
 package batch
 
 import (
-	"github.com/bhojpur/host/pkg/labni/controller"
 	v1 "github.com/bhojpur/host/pkg/generated/controllers/batch/v1"
+	"github.com/bhojpur/host/pkg/labni/controller"
 )
 
 type Interface interface {

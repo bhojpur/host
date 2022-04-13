@@ -23,8 +23,8 @@
 package core
 
 import (
-	"github.com/bhojpur/host/pkg/labni/controller"
 	v1 "github.com/bhojpur/host/pkg/generated/controllers/core/v1"
+	"github.com/bhojpur/host/pkg/labni/controller"
 )
 
 type Interface interface {

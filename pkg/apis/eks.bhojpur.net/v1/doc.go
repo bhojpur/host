@@ -22,5 +22,4 @@
 
 // +k8s:deepcopy-gen=package
 // +groupName=eks.bhojpur.net
-
 package v1

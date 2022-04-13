@@ -1,10 +1,6 @@
 //go:build !server
 // +build !server
 
-//go:generate go run k8s.io/gengo/examples/deepcopy-gen --go-header-file ./scripts/boilerplate.go.txt --input-dirs ./pkg/engine/types --input-dirs ./pkg/engine/types/kdm --output-file-base zz_generated_deepcopy
-//go:generate go run ./pkg/codegen/codegen.go
-//go:generate go run github.com/go-bindata/go-bindata/go-bindata -o ./pkg/data/bindata.go -ignore bindata.go -pkg data -modtime 1557785965 -mode 0644 ./pkg/data/
-
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,9 +28,9 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/mattn/go-colorable"
-	cmd "github.com/bhojpur/host/cmd/server/commands"
+	cmd "github.com/bhojpur/host/cmd/engine/commands"
 	"github.com/bhojpur/host/pkg/engine/metadata"
+	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
@@ -55,7 +51,7 @@ func mainErr() error {
 	app := cli.NewApp()
 	app.Name = "hostsvr"
 	app.Version = VERSION
-	app.Usage = "Bhojpur Kubernetes Engine, an extremely simple, lightning fast Kubernetes installer that works everywhere"
+	app.Usage = "Bhojpur CLI tool for installing fast Kubernetes Engine that works everywhere"
 	app.Before = func(ctx *cli.Context) error {
 		if ctx.GlobalBool("quiet") {
 			logrus.SetOutput(ioutil.Discard)
@@ -73,11 +69,11 @@ func mainErr() error {
 			metadata.BKEVersion = app.Version
 			return nil
 		}
-		logrus.Warnf("This is not an officially supported version (%s) of BKE. Please download the latest official release at https://github.com/bhojpur/host/releases", app.Version)
+		logrus.Warnf("This is not an officially supported version (%s) of Bhojpur Kubernetes Engine. Please download the latest official release at https://github.com/bhojpur/host/releases", app.Version)
 		return nil
 	}
 	app.Author = "Bhojpur Consulting Private Limited, India."
-	app.Email = ""
+	app.Email = "https://www.bhojpur-consulting.com"
 	app.Commands = []cli.Command{
 		cmd.UpCommand(),
 		cmd.RemoveCommand(),

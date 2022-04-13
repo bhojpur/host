@@ -22,5 +22,4 @@
 
 // +k8s:deepcopy-gen=package
 // +groupName=management.bhojpur.net
-
 package v3

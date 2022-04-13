@@ -23,8 +23,8 @@
 package extensions
 
 import (
-	"github.com/bhojpur/host/pkg/labni/controller"
 	v1beta1 "github.com/bhojpur/host/pkg/generated/controllers/extensions/v1beta1"
+	"github.com/bhojpur/host/pkg/labni/controller"
 )
 
 type Interface interface {

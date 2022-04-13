@@ -12,12 +12,15 @@ tasks:
     build-tools:
         desc: Build the software tools for build, release of Bhojpur Host applications
         cmds:
-        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostutl cmd/machine/machine.go 
-        - chmod 755 bin/hostutl
-        - cp bin/hostutl $GOPATH/bin
         - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostfarm cmd/container/container.go 
         - chmod 755 bin/hostfarm
         - cp bin/hostfarm $GOPATH/bin
+        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostutl cmd/machine/machine.go 
+        - chmod 755 bin/hostutl
+        - cp bin/hostutl $GOPATH/bin
+        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostsvr cmd/engine/engine.go 
+        - chmod 755 bin/hostsvr
+        - cp bin/hostsvr $GOPATH/bin
 
     build-web:
         desc: Build the Cloud applications using Go

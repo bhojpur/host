@@ -22,5 +22,4 @@
 
 // +k8s:deepcopy-gen=package
 // +groupName=ui.bhojpur.net
-
 package v1

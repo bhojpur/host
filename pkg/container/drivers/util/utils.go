@@ -25,7 +25,7 @@ import (
 	"fmt"
 	"time"
 
-	v3 "github.com/bhojpur/host/pkg/apis/management.bhojpur.net/v3"
+	v3 "github.com/bhojpur/host/pkg/client/generated/management/v3"
 	errs "github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 	v1 "k8s.io/api/core/v1"

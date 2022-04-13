@@ -23,8 +23,8 @@
 package v1beta1
 
 import (
-	"github.com/bhojpur/host/pkg/labni/controller"
 	"github.com/bhojpur/host/pkg/common/schemes"
+	"github.com/bhojpur/host/pkg/labni/controller"
 	v1beta1 "k8s.io/api/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )

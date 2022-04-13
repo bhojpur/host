@@ -22,5 +22,4 @@
 
 // +k8s:deepcopy-gen=package
 // +groupName=cluster.bhojpur.net
-
 package v3

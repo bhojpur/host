@@ -23,8 +23,8 @@
 package apiextensions
 
 import (
-	"github.com/bhojpur/host/pkg/labni/controller"
 	v1 "github.com/bhojpur/host/pkg/generated/controllers/apiextensions.k8s.io/v1"
+	"github.com/bhojpur/host/pkg/labni/controller"
 )
 
 type Interface interface {
