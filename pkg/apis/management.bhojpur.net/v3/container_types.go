@@ -29,27 +29,27 @@ import (
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type KontainerDriver struct {
+type ContainerDriver struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object’s metadata. More info:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// Specification of the desired behavior of the the cluster. More info:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
-	Spec KontainerDriverSpec `json:"spec"`
+	Spec ContainerDriverSpec `json:"spec"`
 	// Most recent observed status of the cluster. More info:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
-	Status KontainerDriverStatus `json:"status"`
+	Status ContainerDriverStatus `json:"status"`
 }
 
-type KontainerDriverStatus struct {
+type ContainerDriverStatus struct {
 	ActualURL      string      `json:"actualUrl"`
 	ExecutablePath string      `json:"executablePath"`
 	Conditions     []Condition `json:"conditions"`
 	DisplayName    string      `json:"displayName"`
 }
 
-type KontainerDriverSpec struct {
+type ContainerDriverSpec struct {
 	URL              string   `json:"url" bhojpur:"required"`
 	Checksum         string   `json:"checksum"`
 	BuiltIn          bool     `json:"builtIn" bhojpur:"noupdate"`
@@ -59,8 +59,8 @@ type KontainerDriverSpec struct {
 }
 
 var (
-	KontainerDriverConditionDownloaded condition.Cond = "Downloaded"
-	KontainerDriverConditionInstalled  condition.Cond = "Installed"
-	KontainerDriverConditionActive     condition.Cond = "Active"
-	KontainerDriverConditionInactive   condition.Cond = "Inactive"
+	ContainerDriverConditionDownloaded condition.Cond = "Downloaded"
+	ContainerDriverConditionInstalled  condition.Cond = "Installed"
+	ContainerDriverConditionActive     condition.Cond = "Active"
+	ContainerDriverConditionInactive   condition.Cond = "Inactive"
 )

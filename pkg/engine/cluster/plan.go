@@ -45,29 +45,29 @@ import (
 )
 
 const (
-	ClusterCIDREnv        = "RKE_CLUSTER_CIDR"
-	ClusterServiceCIDREnv = "RKE_CLUSTER_SERVICE_CIDR"
-	ClusterDNSServerEnv   = "RKE_CLUSTER_DNS_SERVER"
-	ClusterDomainEnv      = "RKE_CLUSTER_DOMAIN"
+	ClusterCIDREnv        = "BKE_CLUSTER_CIDR"
+	ClusterServiceCIDREnv = "BKE_CLUSTER_SERVICE_CIDR"
+	ClusterDNSServerEnv   = "BKE_CLUSTER_DNS_SERVER"
+	ClusterDomainEnv      = "BKE_CLUSTER_DOMAIN"
 
-	NodeAddressEnv         = "RKE_NODE_ADDRESS"
-	NodeInternalAddressEnv = "RKE_NODE_INTERNAL_ADDRESS"
-	NodeNameOverrideEnv    = "RKE_NODE_NAME_OVERRIDE"
-	NodePrefixPath         = "RKE_NODE_PREFIX_PATH"
+	NodeAddressEnv         = "BKE_NODE_ADDRESS"
+	NodeInternalAddressEnv = "BKE_NODE_INTERNAL_ADDRESS"
+	NodeNameOverrideEnv    = "BKE_NODE_NAME_OVERRIDE"
+	NodePrefixPath         = "BKE_NODE_PREFIX_PATH"
 
-	NetworkConfigurationEnv = "RKE_NETWORK_CONFIGURATION"
+	NetworkConfigurationEnv = "BKE_NETWORK_CONFIGURATION"
 
 	EtcdPathPrefix       = "/registry"
-	CloudConfigSumEnv    = "RKE_CLOUD_CONFIG_CHECKSUM"
-	CloudProviderNameEnv = "RKE_CLOUD_PROVIDER_NAME"
-	AuditLogConfigSumEnv = "RKE_AUDITLOG_CONFIG_CHECKSUM"
+	CloudConfigSumEnv    = "BKE_CLOUD_CONFIG_CHECKSUM"
+	CloudProviderNameEnv = "BKE_CLOUD_PROVIDER_NAME"
+	AuditLogConfigSumEnv = "BKE_AUDITLOG_CONFIG_CHECKSUM"
 
 	DefaultToolsEntrypoint        = "/opt/bke-tools/entrypoint.sh"
 	DefaultToolsEntrypointVersion = "0.1.13"
 	LegacyToolsEntrypoint         = "/opt/bke/entrypoint.sh"
 
-	KubeletDockerConfigEnv     = "RKE_KUBELET_DOCKER_CONFIG"
-	KubeletDockerConfigFileEnv = "RKE_KUBELET_DOCKER_FILE"
+	KubeletDockerConfigEnv     = "BKE_KUBELET_DOCKER_CONFIG"
+	KubeletDockerConfigFileEnv = "BKE_KUBELET_DOCKER_FILE"
 	KubeletDockerConfigPath    = "/var/lib/kubelet/config.json"
 
 	// MaxEtcdOldEnvVersion The versions are maxed out for minor versions because -bhojpur1 suffix will cause semver to think its older, example: v1.15.0 > v1.15.0-bhojpur1
@@ -80,7 +80,7 @@ const (
 
 	EncryptionProviderConfigArgument = "encryption-provider-config"
 
-	KubeletCRIDockerdNameEnv = "RKE_KUBELET_CRIDOCKERD"
+	KubeletCRIDockerdNameEnv = "BKE_KUBELET_CRIDOCKERD"
 )
 
 var admissionControlOptionNames = []string{"enable-admission-plugins", "admission-control"}

@@ -66,7 +66,7 @@ var (
 		Init(clusterCatalogTypes).
 		Init(multiClusterAppTypes).
 		Init(globalDNSTypes).
-		Init(kontainerTypes).
+		Init(containerTypes).
 		Init(etcdBackupTypes).
 		Init(clusterScanTypes).
 		Init(monitorTypes).
@@ -904,13 +904,13 @@ func globalDNSTypes(schemas *types.Schemas) *types.Schemas {
 		})
 }
 
-func kontainerTypes(schemas *types.Schemas) *types.Schemas {
+func containerTypes(schemas *types.Schemas) *types.Schemas {
 	return schemas.
-		AddMapperForType(&Version, v3.KontainerDriver{},
+		AddMapperForType(&Version, v3.ContainerDriver{},
 			&m.Embed{Field: "status"},
 			m.DisplayName{},
 		).
-		MustImportAndCustomize(&Version, v3.KontainerDriver{}, func(schema *types.Schema) {
+		MustImportAndCustomize(&Version, v3.ContainerDriver{}, func(schema *types.Schema) {
 			schema.ResourceActions = map[string]types.Action{
 				"activate":   {},
 				"deactivate": {},
