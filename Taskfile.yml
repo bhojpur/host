@@ -17,13 +17,13 @@ tasks:
     build-tools:
         desc: Build the software tools for build, release of Bhojpur Host applications
         cmds:
-        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostutl cmd/machine/machine.go 
+        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostutl cmd/machine/engine.go 
         - chmod 755 bin/hostutl
         - cp bin/hostutl $GOPATH/bin
-        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostfarm cmd/container/container.go 
+        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostfarm cmd/cluster/engine.go 
         - chmod 755 bin/hostfarm
         - cp bin/hostfarm $GOPATH/bin
-        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostops cmd/engine/engine.go 
+        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostops cmd/operation/engine.go 
         - chmod 755 bin/hostops
         - cp bin/hostops $GOPATH/bin
 
@@ -97,7 +97,7 @@ tasks:
     generate:
         desc: Generate Go source code from Protocol Buffers
         cmds:
-        - protoc --go_out=./pkg/container --go-grpc_out=./pkg/container --go_opt=module=github.com/bhojpur/host/pkg/container --go-grpc_opt=require_unimplemented_servers=false,module=github.com/bhojpur/host/pkg/container pkg/container/types/drivers.proto
+        - protoc --go_out=./pkg/cluster --go-grpc_out=./pkg/cluster --go_opt=module=github.com/bhojpur/host/pkg/cluster --go-grpc_opt=require_unimplemented_servers=false,module=github.com/bhojpur/host/pkg/cluster pkg/cluster/types/drivers.proto
 
     test:
         desc: Execute all the Unit Tests

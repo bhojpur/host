@@ -25,7 +25,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/container/log"
+	"github.com/bhojpur/host/pkg/cluster/log"
 	"github.com/bhojpur/host/pkg/engine/hosts"
 	"github.com/bhojpur/host/pkg/engine/pki"
 	"github.com/bhojpur/host/pkg/engine/services"
@@ -78,7 +78,7 @@ func (c *Cluster) TunnelHosts(ctx context.Context, flags ExternalFlags) error {
 		c.EtcdHosts = removeFromHosts(host, c.EtcdHosts)
 		c.ControlPlaneHosts = removeFromHosts(host, c.ControlPlaneHosts)
 		c.WorkerHosts = removeFromHosts(host, c.WorkerHosts)
-		c.BhojpurKubernetesEngineConfig.Nodes = removeFromRKENodes(host.BKEConfigNode, c.BhojpurKubernetesEngineConfig.Nodes)
+		c.BhojpurKubernetesEngineConfig.Nodes = removeFromBKENodes(host.BKEConfigNode, c.BhojpurKubernetesEngineConfig.Nodes)
 	}
 	return ValidateHostCount(c)
 }
@@ -343,7 +343,7 @@ func removeFromHosts(hostToRemove *hosts.Host, hostList []*hosts.Host) []*hosts.
 	return hostList
 }
 
-func removeFromRKENodes(nodeToRemove v3.BKEConfigNode, nodeList []v3.BKEConfigNode) []v3.BKEConfigNode {
+func removeFromBKENodes(nodeToRemove v3.BKEConfigNode, nodeList []v3.BKEConfigNode) []v3.BKEConfigNode {
 	l := []v3.BKEConfigNode{}
 	for _, node := range nodeList {
 		if nodeToRemove.Address != node.Address {

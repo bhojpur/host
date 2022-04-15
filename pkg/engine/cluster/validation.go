@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/container/log"
+	"github.com/bhojpur/host/pkg/cluster/log"
 	"github.com/bhojpur/host/pkg/engine/metadata"
 	"github.com/bhojpur/host/pkg/engine/pki"
 	"github.com/bhojpur/host/pkg/engine/services"
@@ -367,10 +367,10 @@ func validateEtcdBackupOptions(c *Cluster) error {
 	if c.Services.Etcd.BackupConfig != nil {
 		if c.Services.Etcd.BackupConfig.S3BackupConfig != nil {
 			if len(c.Services.Etcd.BackupConfig.S3BackupConfig.Endpoint) == 0 {
-				return errors.New("etcd s3 backup backend endpoint can't be empty")
+				return errors.New("etcd S3 backup backend endpoint can't be empty")
 			}
 			if len(c.Services.Etcd.BackupConfig.S3BackupConfig.BucketName) == 0 {
-				return errors.New("etcd s3 backup backend bucketName can't be empty")
+				return errors.New("etcd S3 backup backend bucketName can't be empty")
 			}
 			if len(c.Services.Etcd.BackupConfig.S3BackupConfig.CustomCA) != 0 {
 				if isValid, err := pki.IsValidCertStr(c.Services.Etcd.BackupConfig.S3BackupConfig.CustomCA); !isValid {
@@ -464,7 +464,7 @@ func validateVersion(ctx context.Context, c *Cluster) error {
 	}
 
 	if _, ok := metadata.K8sBadVersions[c.Version]; ok {
-		log.Warnf(ctx, "%s version exists but its recommended to install this version - see 'rke config --system-images --all' for versions supported with this release", c.Version)
+		log.Warnf(ctx, "%s version exists but its recommended to install this version - see 'hostops config --system-images --all' for versions supported with this release", c.Version)
 		return fmt.Errorf("%s is an unsupported Kubernetes version and system images are not populated: %v", c.Version, err)
 	}
 

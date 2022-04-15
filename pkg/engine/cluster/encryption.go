@@ -29,7 +29,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/bhojpur/host/pkg/container/log"
+	"github.com/bhojpur/host/pkg/cluster/log"
 	bhojpurtypes "github.com/bhojpur/host/pkg/core/types"
 	"github.com/bhojpur/host/pkg/engine/k8s"
 	"github.com/bhojpur/host/pkg/engine/services"

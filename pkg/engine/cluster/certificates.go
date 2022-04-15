@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bhojpur/host/pkg/container/log"
+	"github.com/bhojpur/host/pkg/cluster/log"
 	"github.com/bhojpur/host/pkg/engine/hosts"
 	"github.com/bhojpur/host/pkg/engine/k8s"
 	"github.com/bhojpur/host/pkg/engine/pki"

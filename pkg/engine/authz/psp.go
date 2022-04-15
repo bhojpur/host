@@ -25,7 +25,7 @@ import (
 
 	"k8s.io/client-go/transport"
 
-	"github.com/bhojpur/host/pkg/container/log"
+	"github.com/bhojpur/host/pkg/cluster/log"
 	"github.com/bhojpur/host/pkg/engine/k8s"
 	"github.com/bhojpur/host/pkg/engine/templates"
 )

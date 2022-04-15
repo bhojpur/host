@@ -28,7 +28,7 @@ import (
 	"os"
 	"regexp"
 
-	cmd "github.com/bhojpur/host/cmd/engine/commands"
+	cmd "github.com/bhojpur/host/cmd/operation/commands"
 	"github.com/bhojpur/host/pkg/engine/metadata"
 	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"

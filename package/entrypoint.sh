@@ -12,7 +12,7 @@ for i; do
       driver_hash=${i##--driver-hash=}
     ;;
     *)
-      # Breaking up arguments that are passed to bhojpur-machine allows for handling values with spaces.
+      # Breaking up arguments that are passed to Bhojpur Host machine allows for handling values with spaces.
       flag=${i%%=*}
       value=${i#--*=}
       if [ "$flag" = "$value" ]; then
@@ -36,4 +36,4 @@ if [ -n "$driver_url" ]; then
   fi
 fi
 
-{ { { { bhojpur-machine "$@" 2>&1; echo $? >&3; } | tee -a $termination_log >&4; } 3>&1; } | { read xs; exit $xs; } } 4>&1
+{ { { { hostutl "$@" 2>&1; echo $? >&3; } | tee -a $termination_log >&4; } 3>&1; } | { read xs; exit $xs; } } 4>&1

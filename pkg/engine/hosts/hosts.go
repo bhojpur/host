@@ -30,7 +30,7 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/sirupsen/logrus"
 
-	"github.com/bhojpur/host/pkg/container/log"
+	"github.com/bhojpur/host/pkg/cluster/log"
 	"github.com/bhojpur/host/pkg/engine/docker"
 	"github.com/bhojpur/host/pkg/engine/k8s"
 	v3 "github.com/bhojpur/host/pkg/engine/types"

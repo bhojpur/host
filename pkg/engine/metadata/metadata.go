@@ -88,7 +88,7 @@ func loadData() (kdm.Data, error) {
 		}
 	} else {
 		logrus.Debug("Loading data.json from local source")
-		b, err = data.Asset("data/data.json")
+		b, err = data.Asset("pkg/data/data.json")
 		if err != nil {
 			return kdm.Data{}, err
 		}

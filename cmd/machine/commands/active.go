@@ -36,7 +36,7 @@ const (
 )
 
 var (
-	errNoActiveHost  = errors.New("No active host found")
+	errNoActiveHost  = errors.New("No active Bhojpur Host found")
 	errActiveTimeout = errors.New("Error getting active Bhojpur Host: timeout")
 )
 

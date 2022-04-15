@@ -32,7 +32,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bhojpur/host/pkg/container/log"
+	"github.com/bhojpur/host/pkg/cluster/log"
 	"github.com/bhojpur/host/pkg/engine/addons"
 	"github.com/bhojpur/host/pkg/engine/authz"
 	"github.com/bhojpur/host/pkg/engine/k8s"
