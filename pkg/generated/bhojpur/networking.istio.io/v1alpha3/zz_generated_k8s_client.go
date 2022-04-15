@@ -4,9 +4,9 @@ import (
 	"github.com/bhojpur/host/pkg/core/objectclient"
 	"github.com/bhojpur/host/pkg/labni/client"
 	"github.com/bhojpur/host/pkg/labni/controller"
-	"github.com/knative/pkg/apis/istio/v1alpha3"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
+	"knative.dev/pkg/apis/istio/v1alpha3"
 )
 
 type Interface interface {

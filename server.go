@@ -49,7 +49,7 @@ func main() {
 
 func mainErr() error {
 	app := cli.NewApp()
-	app.Name = "hostsvr"
+	app.Name = "hosting"
 	app.Version = VERSION
 	app.Usage = "Bhojpur CLI tool for installing fast Kubernetes Engine that works everywhere"
 	app.Before = func(ctx *cli.Context) error {

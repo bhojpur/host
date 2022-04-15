@@ -194,7 +194,7 @@ func fetchAndUpdateStateFromLegacyCluster(ctx context.Context, kubeCluster *clus
 			return err
 		}
 		if recoveredCluster := cluster.GetStateFromNodes(ctx, kubeCluster); recoveredCluster != nil {
-			return fmt.Errorf("This is a legacy cluster with no kube config, aborting upgrade. Please re-run hostsvr up with BKE 0.1.x to retrieve correct state")
+			return fmt.Errorf("This is a legacy cluster with no kube config, aborting upgrade. Please re-run hostops up with Bhojpur Kubernetes Engine 0.1.x to retrieve correct state")
 		}
 		return nil
 	}

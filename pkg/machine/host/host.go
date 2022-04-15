@@ -240,11 +240,11 @@ func (h *Host) Upgrade() error {
 	// re-install from scratch, since the official package names will
 	// change from 'bhojpur-engine' to 'bhojpur-ce'.
 	if versioncmp.LessThanOrEqualTo(bhojpurVersion, provision.LastReleaseBeforeCEVersioning) &&
-		// RancherOS and boot2docker, being 'static ISO builds', have
+		// BhojpurOS and boot2docker, being 'static ISO builds', have
 		// an upgrade process which simply grabs the latest if it's
 		// different, and so do not need to jump through this hoop to
 		// upgrade safely.
-		provisioner.String() != "rancheros" &&
+		provisioner.String() != "bhojpuros" &&
 		provisioner.String() != "boot2docker" {
 
 		// Name of package 'bhojpur-engine' will fall through in this

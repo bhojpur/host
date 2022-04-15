@@ -32,7 +32,6 @@ import (
 	"time"
 
 	cmd "github.com/bhojpur/host/cmd/engine/commands"
-	v3 "github.com/bhojpur/host/pkg/client/generated/management/v3"
 	"github.com/bhojpur/host/pkg/container/drivers/bke/bkecerts"
 	"github.com/bhojpur/host/pkg/container/drivers/util"
 	"github.com/bhojpur/host/pkg/container/log"
@@ -41,6 +40,7 @@ import (
 	"github.com/bhojpur/host/pkg/engine/cluster"
 	"github.com/bhojpur/host/pkg/engine/hosts"
 	"github.com/bhojpur/host/pkg/engine/pki"
+	v3 "github.com/bhojpur/host/pkg/engine/types"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"

@@ -111,7 +111,7 @@ func RotateEncryptionKey(
 		return APIURL, caCrt, clientCert, clientKey, nil, fmt.Errorf("can't rotate encryption keys: Key Rotation is not supported with custom configuration")
 	}
 	if !kubeCluster.IsEncryptionEnabled() {
-		return APIURL, caCrt, clientCert, clientKey, nil, fmt.Errorf("can't rotate encryption keys: Encryption Configuration is disabled. Please disable rotate_encryption_key and run hostsvr up again")
+		return APIURL, caCrt, clientCert, clientKey, nil, fmt.Errorf("can't rotate encryption keys: Encryption Configuration is disabled. Please disable rotate_encryption_key and run hostops up again")
 	}
 
 	kubeCluster.Certificates = bkeFullState.DesiredState.CertificatesBundle

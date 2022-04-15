@@ -7,7 +7,6 @@ import (
 	"github.com/bhojpur/host/pkg/core/controller"
 	"github.com/bhojpur/host/pkg/core/objectclient"
 	"github.com/bhojpur/host/pkg/core/resource"
-	"github.com/knative/pkg/apis/istio/v1alpha3"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -16,6 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
+	"knative.dev/pkg/apis/istio/v1alpha3"
 )
 
 var (

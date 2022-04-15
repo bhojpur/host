@@ -1,4 +1,4 @@
-package drivers
+package subscribe
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -21,22 +21,16 @@ package drivers
 // THE SOFTWARE.
 
 import (
-	"github.com/bhojpur/host/pkg/container/drivers/aks"
-	"github.com/bhojpur/host/pkg/container/drivers/bke"
-	"github.com/bhojpur/host/pkg/container/drivers/eks"
-	"github.com/bhojpur/host/pkg/container/drivers/gke"
-	kubeimport "github.com/bhojpur/host/pkg/container/drivers/import"
-	"github.com/bhojpur/host/pkg/container/types"
+	"net/http"
+
+	"github.com/bhojpur/host/pkg/core/types"
 )
 
-var Drivers map[string]types.Driver
-
-func init() {
-	Drivers = map[string]types.Driver{
-		"googlekubernetesengine":        gke.NewDriver(),
-		"azurekubernetesservice":        aks.NewDriver(),
-		"amazonelasticcontainerservice": eks.NewDriver(),
-		"import":                        kubeimport.NewDriver(),
-		"bke":                           bke.NewDriver(),
-	}
+func Register(version *types.APIVersion, schemas *types.Schemas) {
+	schemas.MustImportAndCustomize(version, Subscribe{}, func(schema *types.Schema) {
+		schema.CollectionMethods = []string{http.MethodGet}
+		schema.ResourceMethods = []string{}
+		schema.ListHandler = Handler
+		schema.PluralName = "subscribe"
+	})
 }

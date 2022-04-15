@@ -3,10 +3,10 @@ package client
 const (
 	HTTPRedirectType           = "httpRedirect"
 	HTTPRedirectFieldAuthority = "authority"
-	HTTPRedirectFieldURI       = "uri"
+	HTTPRedirectFieldUri       = "uri"
 )
 
 type HTTPRedirect struct {
 	Authority string `json:"authority,omitempty" yaml:"authority,omitempty"`
-	URI       string `json:"uri,omitempty" yaml:"uri,omitempty"`
+	Uri       string `json:"uri,omitempty" yaml:"uri,omitempty"`
 }

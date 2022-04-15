@@ -129,7 +129,7 @@ func (d *Driver) getSecurityRules(extraPorts []string) (*[]network.SecurityRule,
 	// Base ports to be opened for any machine
 	rl := []network.SecurityRule{
 		mkRule(100, "SSHAllowAny", "Allow ssh from public Internet", "*", fmt.Sprintf("%d", d.BaseDriver.SSHPort), network.SecurityRuleProtocolTCP),
-		mkRule(300, "BhojpurAllowAny", "Allow bhojpur host engine access (TLS-protected)", "*", fmt.Sprintf("%d", d.BhojpurPort), network.SecurityRuleProtocolTCP),
+		mkRule(300, "BhojpurAllowAny", "Allow Bhojpur Host engine access (TLS-protected)", "*", fmt.Sprintf("%d", d.BhojpurPort), network.SecurityRuleProtocolTCP),
 	}
 
 	// extra port numbers requested by user

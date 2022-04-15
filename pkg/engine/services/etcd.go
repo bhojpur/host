@@ -80,14 +80,14 @@ func RunEtcdPlane(
 			return err
 		}
 		if *es.Snapshot == true {
-			rkeToolsImage, err := util.GetDefaultBKETools(alpineImage)
+			bkeToolsImage, err := util.GetDefaultBKETools(alpineImage)
 			if err != nil {
 				return err
 			}
-			if err := RunEtcdSnapshotSave(ctx, host, prsMap, rkeToolsImage, EtcdSnapshotContainerName, false, es, k8sVersion); err != nil {
+			if err := RunEtcdSnapshotSave(ctx, host, prsMap, bkeToolsImage, EtcdSnapshotContainerName, false, es, k8sVersion); err != nil {
 				return err
 			}
-			if err := pki.SaveBackupBundleOnHost(ctx, host, rkeToolsImage, EtcdSnapshotPath, prsMap, k8sVersion); err != nil {
+			if err := pki.SaveBackupBundleOnHost(ctx, host, bkeToolsImage, EtcdSnapshotPath, prsMap, k8sVersion); err != nil {
 				return err
 			}
 			if err := createLogLink(ctx, host, EtcdSnapshotContainerName, ETCDRole, alpineImage, prsMap); err != nil {

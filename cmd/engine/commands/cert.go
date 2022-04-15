@@ -43,7 +43,7 @@ func CertificateCommand() cli.Command {
 			Name:   "config",
 			Usage:  "Specify an alternate cluster YAML file",
 			Value:  pki.ClusterConfig,
-			EnvVar: "BKE_CONFIG",
+			EnvVar: "BHOJPUR_KUBERNETES_CONFIG",
 		},
 		cli.StringSliceFlag{
 			Name: "service",
@@ -68,7 +68,7 @@ func CertificateCommand() cli.Command {
 		Subcommands: cli.Commands{
 			cli.Command{
 				Name:   "rotate",
-				Usage:  "Rotate BKE cluster certificates",
+				Usage:  "Rotate Bhojpur Kubernetes Engine cluster certificates",
 				Action: rotateBKECertificatesFromCli,
 				Flags:  rotateFlags,
 			},
@@ -81,7 +81,7 @@ func CertificateCommand() cli.Command {
 						Name:   "config",
 						Usage:  "Specify an alternate cluster YAML file",
 						Value:  pki.ClusterConfig,
-						EnvVar: "BKE_CONFIG",
+						EnvVar: "BHOJPUR_KUBERNETES_CONFIG",
 					},
 					cli.StringFlag{
 						Name:  "cert-dir",

@@ -10,8 +10,8 @@ const (
 	VirtualServiceFieldCreated              = "created"
 	VirtualServiceFieldCreatorID            = "creatorId"
 	VirtualServiceFieldGateways             = "gateways"
-	VirtualServiceFieldHTTP                 = "http"
 	VirtualServiceFieldHosts                = "hosts"
+	VirtualServiceFieldHttp                 = "http"
 	VirtualServiceFieldLabels               = "labels"
 	VirtualServiceFieldName                 = "name"
 	VirtualServiceFieldNamespaceId          = "namespaceId"
@@ -20,8 +20,7 @@ const (
 	VirtualServiceFieldRemoved              = "removed"
 	VirtualServiceFieldState                = "state"
 	VirtualServiceFieldStatus               = "status"
-	VirtualServiceFieldTCP                  = "tcp"
-	VirtualServiceFieldTLS                  = "tls"
+	VirtualServiceFieldTcp                  = "tcp"
 	VirtualServiceFieldTransitioning        = "transitioning"
 	VirtualServiceFieldTransitioningMessage = "transitioningMessage"
 	VirtualServiceFieldUUID                 = "uuid"
@@ -33,8 +32,8 @@ type VirtualService struct {
 	Created              string            `json:"created,omitempty" yaml:"created,omitempty"`
 	CreatorID            string            `json:"creatorId,omitempty" yaml:"creatorId,omitempty"`
 	Gateways             []string          `json:"gateways,omitempty" yaml:"gateways,omitempty"`
-	HTTP                 []HTTPRoute       `json:"http,omitempty" yaml:"http,omitempty"`
 	Hosts                []string          `json:"hosts,omitempty" yaml:"hosts,omitempty"`
+	Http                 []HTTPRoute       `json:"http,omitempty" yaml:"http,omitempty"`
 	Labels               map[string]string `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Name                 string            `json:"name,omitempty" yaml:"name,omitempty"`
 	NamespaceId          string            `json:"namespaceId,omitempty" yaml:"namespaceId,omitempty"`
@@ -43,8 +42,7 @@ type VirtualService struct {
 	Removed              string            `json:"removed,omitempty" yaml:"removed,omitempty"`
 	State                string            `json:"state,omitempty" yaml:"state,omitempty"`
 	Status               interface{}       `json:"status,omitempty" yaml:"status,omitempty"`
-	TCP                  []TCPRoute        `json:"tcp,omitempty" yaml:"tcp,omitempty"`
-	TLS                  []TLSRoute        `json:"tls,omitempty" yaml:"tls,omitempty"`
+	Tcp                  []TCPRoute        `json:"tcp,omitempty" yaml:"tcp,omitempty"`
 	Transitioning        string            `json:"transitioning,omitempty" yaml:"transitioning,omitempty"`
 	TransitioningMessage string            `json:"transitioningMessage,omitempty" yaml:"transitioningMessage,omitempty"`
 	UUID                 string            `json:"uuid,omitempty" yaml:"uuid,omitempty"`

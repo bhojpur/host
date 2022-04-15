@@ -28,7 +28,6 @@ import (
 	m "github.com/bhojpur/host/pkg/core/types/mapper"
 	"github.com/bhojpur/host/pkg/schemas/factory"
 	"github.com/bhojpur/host/pkg/schemas/mapper"
-	istiov1alpha3 "github.com/knative/pkg/apis/istio/v1alpha3"
 	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	k8sappv1 "k8s.io/api/apps/v1"
@@ -39,6 +38,7 @@ import (
 	kextv1beta1 "k8s.io/api/extensions/v1beta1"
 	knetworkingv1 "k8s.io/api/networking/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	istiov1alpha3 "knative.dev/pkg/apis/istio/v1alpha3"
 )
 
 var (

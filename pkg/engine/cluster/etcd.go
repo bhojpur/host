@@ -132,7 +132,7 @@ func (c *Cluster) PrepareBackup(ctx context.Context, snapshotPath string) error 
 	var backupServer *hosts.Host
 	backupImage := c.getBackupImage()
 	var errors []error
-	if c.Services.Etcd.BackupConfig == nil || // legacy rke local backup
+	if c.Services.Etcd.BackupConfig == nil || // legacy BKE local backup
 		(c.Services.Etcd.BackupConfig != nil && c.Services.Etcd.BackupConfig.S3BackupConfig == nil) { // Bhojpur Host local backup
 		if c.Services.Etcd.BackupConfig == nil {
 			log.Infof(ctx, "[etcd] No etcd snapshot configuration found, will use local as source")
@@ -252,11 +252,11 @@ func (c *Cluster) etcdSnapshotChecksum(ctx context.Context, snapshotPath string)
 }
 
 func (c *Cluster) getBackupImage() string {
-	rkeToolsImage, err := util.GetDefaultBKETools(c.SystemImages.Alpine)
+	bkeToolsImage, err := util.GetDefaultBKETools(c.SystemImages.Alpine)
 	if err != nil {
 		logrus.Errorf("[etcd] error getting backup image %v", err)
 		return ""
 	}
-	logrus.Debugf("[etcd] Image used for etcd snapshot is: [%s]", rkeToolsImage)
-	return rkeToolsImage
+	logrus.Debugf("[etcd] Image used for etcd snapshot is: [%s]", bkeToolsImage)
+	return bkeToolsImage
 }

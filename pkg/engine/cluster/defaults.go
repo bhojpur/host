@@ -593,7 +593,7 @@ func (c *Cluster) setClusterNetworkDefaults() {
 		c.Network.Options = make(map[string]string)
 	}
 	networkPluginConfigDefaultsMap := make(map[string]string)
-	// This is still needed because RKE doesn't use c.Network.*NetworkProvider, that's a Bhojpur type
+	// This is still needed because BKE doesn't use c.Network.*NetworkProvider, that's a Bhojpur type
 	switch c.Network.Plugin {
 	case CalicoNetworkPlugin:
 		networkPluginConfigDefaultsMap = map[string]string{

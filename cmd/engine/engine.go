@@ -21,23 +21,83 @@ package main
 // THE SOFTWARE.
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
+	"strconv"
 
 	cmd "github.com/bhojpur/host/cmd/engine/commands"
 	"github.com/bhojpur/host/pkg/engine/metadata"
+	"github.com/bhojpur/host/pkg/machine/log"
+	"github.com/bhojpur/host/pkg/version"
 	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
-// VERSION gets overridden at build time using -X main.VERSION=$VERSION
-var VERSION = "dev"
 var released = regexp.MustCompile(`^v[0-9]+\.[0-9]+\.[0-9]+$`)
 
+var appHelpTemplate = `Usage: {{.Name}} {{if .Flags}}[OPTIONS] {{end}}COMMAND [arg...]
+
+{{.Usage}}
+
+Version: {{.Version}}{{if or .Author .Email}}
+
+Author:{{if .Author}}
+  {{.Author}}{{if .Email}} - <{{.Email}}>{{end}}{{else}}
+  {{.Email}}{{end}}{{end}}
+{{if .Flags}}
+Options:
+  {{range .Flags}}{{.}}
+  {{end}}{{end}}
+Commands:
+  {{range .Commands}}{{.Name}}{{with .ShortName}}, {{.}}{{end}}{{ "\t" }}{{.Usage}}
+  {{end}}
+Run '{{.Name}} COMMAND --help' for more information on a command.
+`
+
+var commandHelpTemplate = `Usage: hostops {{.Name}}{{if .Flags}} [OPTIONS]{{end}} [arg...]
+
+{{.Usage}}{{if .Description}}
+
+Description:
+   {{.Description}}{{end}}{{if .Flags}}
+
+Options:
+   {{range .Flags}}
+   {{.}}{{end}}{{ end }}
+`
+
+func setDebugOutputLevel() {
+	// check -D, --debug and -debug, if set force debug and env var
+	for _, f := range os.Args {
+		if f == "-D" || f == "--debug" || f == "-debug" {
+			os.Setenv("BHOJPUR_ENGINE_DEBUG", "1")
+			log.SetDebug(true)
+			return
+		}
+	}
+
+	// check env
+	debugEnv := os.Getenv("BHOJPUR_ENGINE_DEBUG")
+	if debugEnv != "" {
+		showDebug, err := strconv.ParseBool(debugEnv)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error parsing boolean value from BHOJPUR_ENGINE_DEBUG: %s\n", err)
+			os.Exit(1)
+		}
+		log.SetDebug(showDebug)
+	}
+}
+
 func main() {
+	cli.AppHelpTemplate = appHelpTemplate
+	cli.CommandHelpTemplate = commandHelpTemplate
+
 	logrus.SetOutput(colorable.NewColorableStdout())
+	setDebugOutputLevel()
 
 	if err := mainErr(); err != nil {
 		logrus.Fatal(err)
@@ -46,9 +106,12 @@ func main() {
 
 func mainErr() error {
 	app := cli.NewApp()
-	app.Name = "hostsvr"
-	app.Version = VERSION
-	app.Usage = "Bhojpur CLI tool for installing fast Kubernetes Engine that works everywhere"
+	app.Name = filepath.Base(os.Args[0])
+	app.Author = "Bhojpur Consulting Private Limited, India."
+	app.Email = "https://www.bhojpur-consulting.com"
+	app.Version = version.FullVersion()
+	app.Usage = "Bhojpur CLI tool for installing Kubernetes Engine that works everywhere"
+
 	app.Before = func(ctx *cli.Context) error {
 		if ctx.GlobalBool("quiet") {
 			logrus.SetOutput(ioutil.Discard)
@@ -57,6 +120,7 @@ func mainErr() error {
 				logrus.SetLevel(logrus.DebugLevel)
 				logrus.Debugf("Loglevel set to [%v]", logrus.DebugLevel)
 			}
+			logrus.Infof("Bhojpur Host operations version: %v", app.Version)
 			if ctx.GlobalBool("trace") {
 				logrus.SetLevel(logrus.TraceLevel)
 				logrus.Tracef("Loglevel set to [%v]", logrus.TraceLevel)
@@ -66,11 +130,9 @@ func mainErr() error {
 			metadata.BKEVersion = app.Version
 			return nil
 		}
-		logrus.Warnf("This is not an officially supported version (%s) of Bhojpur Kubernetes Engine. Please download the latest official release at https://github.com/bhojpur/host/releases", app.Version)
+		logrus.Warnf("This is not an officially supported version (%s) of\nthe Cluster Operations Engine. Please download latest official release from\n\thttps://github.com/bhojpur/host/releases", app.Version)
 		return nil
 	}
-	app.Author = "Bhojpur Consulting Private Limited, India."
-	app.Email = "https://www.bhojpur-consulting.com"
 	app.Commands = []cli.Command{
 		cmd.UpCommand(),
 		cmd.RemoveCommand(),
@@ -81,6 +143,9 @@ func mainErr() error {
 		cmd.EncryptionCommand(),
 		cmd.UtilCommand(),
 	}
+	app.CommandNotFound = cmdNotFound
+
+	log.Debug("Bhojpur Host version: ", app.Version)
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "debug,d",
@@ -95,5 +160,19 @@ func mainErr() error {
 			Usage: "Trace logging",
 		},
 	}
-	return app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Error(err)
+	}
+	return nil
+}
+
+func cmdNotFound(c *cli.Context, command string) {
+	log.Errorf(
+		"%s: '%s' is not a %s command. See '%s --help'.",
+		c.App.Name,
+		command,
+		c.App.Name,
+		os.Args[0],
+	)
+	os.Exit(1)
 }

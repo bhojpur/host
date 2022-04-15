@@ -76,8 +76,8 @@ const (
 
 	B2DOS               = "Boot2Docker"
 	B2DPrefixPath       = "/mnt/sda1/bke"
-	ROS                 = "RancherOS"
-	ROSPrefixPath       = "/opt/bke"
+	BhojpurOS           = "BhojpurOS"
+	BhojpurOSPrefixPath = "/opt/bos"
 	CoreOS              = "CoreOS"
 	CoreOSPrefixPath    = "/opt/bke"
 	FlatcarOS           = "Flatcar"
@@ -399,8 +399,8 @@ func (h *Host) SetPrefixPath(clusterPrefixPath string) {
 		prefixPath = clusterPrefixPath
 	case strings.Contains(h.DockerInfo.OperatingSystem, B2DOS):
 		prefixPath = B2DPrefixPath
-	case strings.Contains(h.DockerInfo.OperatingSystem, ROS):
-		prefixPath = ROSPrefixPath
+	case strings.Contains(h.DockerInfo.OperatingSystem, BhojpurOS):
+		prefixPath = BhojpurOSPrefixPath
 	case strings.Contains(h.DockerInfo.OperatingSystem, CoreOS):
 		prefixPath = CoreOSPrefixPath
 	case strings.Contains(h.DockerInfo.OperatingSystem, FlatcarOS):

@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 
 	"github.com/bhojpur/host/cmd/machine/commands"
@@ -48,10 +49,14 @@ import (
 	"github.com/bhojpur/host/pkg/machine/drivers/plugin/localbinary"
 	"github.com/bhojpur/host/pkg/machine/log"
 	"github.com/bhojpur/host/pkg/version"
+	"github.com/mattn/go-colorable"
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
-var AppHelpTemplate = `Usage: {{.Name}} {{if .Flags}}[OPTIONS] {{end}}COMMAND [arg...]
+var released = regexp.MustCompile(`^v[0-9]+\.[0-9]+\.[0-9]+$`)
+
+var appHelpTemplate = `Usage: {{.Name}} {{if .Flags}}[OPTIONS] {{end}}COMMAND [arg...]
 
 {{.Usage}}
 
@@ -70,7 +75,7 @@ Commands:
 Run '{{.Name}} COMMAND --help' for more information on a command.
 `
 
-var CommandHelpTemplate = `Usage: hostutl {{.Name}}{{if .Flags}} [OPTIONS]{{end}} [arg...]
+var commandHelpTemplate = `Usage: hostutl {{.Name}}{{if .Flags}} [OPTIONS]{{end}} [arg...]
 
 {{.Usage}}{{if .Description}}
 
@@ -86,14 +91,14 @@ func setDebugOutputLevel() {
 	// check -D, --debug and -debug, if set force debug and env var
 	for _, f := range os.Args {
 		if f == "-D" || f == "--debug" || f == "-debug" {
-			os.Setenv("MACHINE_DEBUG", "1")
+			os.Setenv("BHOJPUR_MACHINE_DEBUG", "1")
 			log.SetDebug(true)
 			return
 		}
 	}
 
 	// check env
-	debugEnv := os.Getenv("MACHINE_DEBUG")
+	debugEnv := os.Getenv("BHOJPUR_MACHINE_DEBUG")
 	if debugEnv != "" {
 		showDebug, err := strconv.ParseBool(debugEnv)
 		if err != nil {
@@ -105,28 +110,44 @@ func setDebugOutputLevel() {
 }
 
 func main() {
+	cli.AppHelpTemplate = appHelpTemplate
+	cli.CommandHelpTemplate = commandHelpTemplate
+
+	logrus.SetOutput(colorable.NewColorableStdout())
+	setDebugOutputLevel()
+
+	if err := mainErr(); err != nil {
+		logrus.Fatal(err)
+	}
+}
+
+func mainErr() error {
 	if os.Getenv(localbinary.PluginEnvKey) == localbinary.PluginEnvVal {
 		driverName := os.Getenv(localbinary.PluginEnvDriverName)
 		runDriver(driverName)
-		return
+		return nil
 	}
 
 	localbinary.CurrentBinaryIsBhojpurMachine = true
 
-	setDebugOutputLevel()
-	cli.AppHelpTemplate = AppHelpTemplate
-	cli.CommandHelpTemplate = CommandHelpTemplate
 	app := cli.NewApp()
 	app.Name = filepath.Base(os.Args[0])
 	app.Author = "Bhojpur Consulting Private Limited, India"
 	app.Email = "https://www.bhojpur-consulting.com"
 
-	app.Commands = commands.Commands
-	app.CommandNotFound = cmdNotFound
-	app.Usage = "Bhojpur CLI tool for creating and managing machines running Bhojpur Host"
+	app.Usage = "Bhojpur CLI tool for creating and managing machine instances in a Data Center"
 	app.Version = version.FullVersion()
 
-	log.Debug("Bhojpur Host version: ", app.Version)
+	app.Before = func(ctx *cli.Context) error {
+		if ctx.GlobalBool("debug") {
+			logrus.SetLevel(logrus.DebugLevel)
+		}
+		logrus.Infof("Bhojpur Host machine version: %v", app.Version)
+		logrus.Warnf("This is not an officially supported version (%s) of\nthe Machine Provision Engine. Please download latest official release from\n\thttps://github.com/bhojpur/host/releases", app.Version)
+		return nil
+	}
+	app.Commands = commands.Commands
+	app.CommandNotFound = cmdNotFound
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
@@ -154,7 +175,7 @@ func main() {
 		cli.StringFlag{
 			EnvVar: "MACHINE_TLS_CLIENT_CERT",
 			Name:   "tls-client-cert",
-			Usage:  "Client cert to use for TLS",
+			Usage:  "Client certificate to use for TLS",
 			Value:  "",
 		},
 		cli.StringFlag{
@@ -183,13 +204,13 @@ func main() {
 		cli.StringFlag{
 			EnvVar: "K8S_SECRET_NAME",
 			Name:   "secret-name",
-			Usage:  "The name of a k8s secret to pull and save machine config",
+			Usage:  "The name of a Kubernetes secret to pull and save machine config",
 			Value:  "",
 		},
 		cli.StringFlag{
 			EnvVar: "K8S_SECRET_NAMESPACE",
 			Name:   "secret-namespace",
-			Usage:  "The namespace of a k8s secret to pull and save machine config",
+			Usage:  "The namespace of a Kubernetes secret to pull and save machine config",
 			Value:  "default",
 		},
 		cli.StringFlag{
@@ -203,6 +224,7 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		log.Error(err)
 	}
+	return nil
 }
 
 func runDriver(driverName string) {

@@ -9,24 +9,29 @@ tasks:
         - echo "{{.GREETING}}"
         silent: true
 
+    kube-apis:
+        desc: Generate Go source code from Kubernetes APIs
+        cmds:
+        - GOFLAGS=-mod=mod go generate ./...
+
     build-tools:
         desc: Build the software tools for build, release of Bhojpur Host applications
         cmds:
-        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostfarm cmd/container/container.go 
-        - chmod 755 bin/hostfarm
-        - cp bin/hostfarm $GOPATH/bin
         - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostutl cmd/machine/machine.go 
         - chmod 755 bin/hostutl
         - cp bin/hostutl $GOPATH/bin
-        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostsvr cmd/engine/engine.go 
-        - chmod 755 bin/hostsvr
-        - cp bin/hostsvr $GOPATH/bin
+        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostfarm cmd/container/container.go 
+        - chmod 755 bin/hostfarm
+        - cp bin/hostfarm $GOPATH/bin
+        - GOFLAGS=-mod=mod go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -o bin/hostops cmd/engine/engine.go 
+        - chmod 755 bin/hostops
+        - cp bin/hostops $GOPATH/bin
 
-    build-web:
-        desc: Build the Cloud applications using Go
+    build-cloud:
+        desc: Build the Cloud-aware hosting applications using Go
         cmds:
         - GOFLAGS=-mod=mod go build -o bin/hostctl client.go 
-        - GOFLAGS=-mod=mod go build -o bin/hostsvr server.go
+        - GOFLAGS=-mod=mod go build -o bin/hosting server.go
 
     build-darwin:
         desc: Build the desktop application for current OS

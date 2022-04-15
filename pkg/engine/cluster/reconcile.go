@@ -58,7 +58,7 @@ func ReconcileCluster(ctx context.Context, kubeCluster, currentCluster *Cluster,
 	}
 	// If certificates are not present, this is broken state and should error out
 	if len(currentCluster.Certificates) == 0 {
-		return fmt.Errorf("Certificates are not present in cluster state, recover rkestate file or certificate information in cluster state")
+		return fmt.Errorf("Certificates are not present in cluster state, recover bkestate file or certificate information in cluster state")
 	}
 
 	kubeClient, err := k8s.NewClient(kubeCluster.LocalKubeConfigPath, kubeCluster.K8sWrapTransport)

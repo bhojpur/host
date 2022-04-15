@@ -139,7 +139,7 @@ func CalculateMaxUnavailable(maxUnavailableVal string, numHosts int, role string
 func ResetMaxUnavailable(maxUnavailable, lenInactiveHosts int, component string) (int, error) {
 	if maxUnavailable > WorkerThreads {
 		/* upgrading a large number of nodes in parallel leads to a large number of goroutines, which has led to errors regarding too many open sockets
-		Because of this RKE switched to using workerpools. 50 workerthreads has been sufficient to optimize rke up, upgrading at most 50 nodes in parallel.
+		Because of this BKE switched to using workerpools. 50 workerthreads has been sufficient to optimize hostops up, upgrading at most 50 nodes in parallel.
 		So the user configurable maxUnavailable will be respected only as long as it's less than 50 and capped at 50 */
 		maxUnavailable = WorkerThreads
 		logrus.Infof("Resetting %s to 50, to avoid issues related to upgrading large number of nodes in parallel", "max_unavailable_"+component)

@@ -35,7 +35,6 @@ import (
 	managementSchema "github.com/bhojpur/host/pkg/schemas/management.bhojpur.net/v3"
 	publicSchema "github.com/bhojpur/host/pkg/schemas/management.bhojpur.net/v3public"
 	projectSchema "github.com/bhojpur/host/pkg/schemas/project.bhojpur.net/v3"
-	istiov1alpha3 "github.com/knative/pkg/apis/istio/v1alpha3"
 	"github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring"
 	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
@@ -56,6 +55,7 @@ import (
 	k8sschema "k8s.io/apimachinery/pkg/runtime/schema"
 	apiregistrationv1 "k8s.io/kube-aggregator/pkg/apis/apiregistration/v1"
 	apiv1 "k8s.io/kube-aggregator/pkg/apis/apiregistration/v1"
+	istiov1alpha3 "knative.dev/pkg/apis/istio/v1alpha3"
 	capi "sigs.k8s.io/cluster-api/api/v1beta1"
 )
 

@@ -49,9 +49,7 @@ func (h *Host) TunnelUp(ctx context.Context, dialerFactory DialerFactory, cluste
 	}
 	// set Docker client
 	logrus.Debugf("Connecting to Docker API for host [%s]", h.Address)
-	h.DClient, err = client.NewClientWithOpts(
-		client.WithAPIVersionNegotiation(),
-		client.WithHTTPClient(httpClient))
+	h.DClient, err = client.NewClient(h.Address, "", httpClient, nil)
 	if err != nil {
 		return fmt.Errorf("Can't initiate NewClient: %v", err)
 	}

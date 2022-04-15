@@ -21,53 +21,103 @@ package main
 // THE SOFTWARE.
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 
 	cmd "github.com/bhojpur/host/cmd/container/commands"
 	"github.com/bhojpur/host/pkg/machine/log"
 	"github.com/bhojpur/host/pkg/version"
+	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 )
 
-var appHelpTemplate = `{{.Usage}}
+var released = regexp.MustCompile(`^v[0-9]+\.[0-9]+\.[0-9]+$`)
 
-Usage: {{.Name}} {{if .Flags}}[GLOBAL_OPTIONS] {{end}}COMMAND [arg...]
+var appHelpTemplate = `Usage: {{.Name}} {{if .Flags}}[OPTIONS] {{end}}COMMAND [arg...]
+
+{{.Usage}}
 
 Version: {{.Version}}{{if or .Author .Email}}
+
+Author:{{if .Author}}
+  {{.Author}}{{if .Email}} - <{{.Email}}>{{end}}{{else}}
+  {{.Email}}{{end}}{{end}}
 {{if .Flags}}
 Options:
-  {{range .Flags}}{{if .Hidden}}{{else}}{{.}}
-  {{end}}{{end}}{{end}}
+  {{range .Flags}}{{.}}
+  {{end}}{{end}}
 Commands:
   {{range .Commands}}{{.Name}}{{with .ShortName}}, {{.}}{{end}}{{ "\t" }}{{.Usage}}
   {{end}}
 Run '{{.Name}} COMMAND --help' for more information on a command.
 `
 
-var commandHelpTemplate = `{{.Usage}}
-{{if .Description}}{{.Description}}{{end}}
-Usage: hostfarm [global options] {{.Name}} {{if .Flags}}[OPTIONS] {{end}}{{if ne "None" .ArgsUsage}}{{if ne "" .ArgsUsage}}{{.ArgsUsage}}{{else}}[arg...]{{end}}{{end}}
+var commandHelpTemplate = `Usage: hostfarm {{.Name}}{{if .Flags}} [OPTIONS]{{end}} [arg...]
 
-{{if .Flags}}Options:{{range .Flags}}
-	 {{.}}{{end}}{{end}}
+{{.Usage}}{{if .Description}}
+
+Description:
+   {{.Description}}{{end}}{{if .Flags}}
+
+Options:
+   {{range .Flags}}
+   {{.}}{{end}}{{ end }}
 `
+
+func setDebugOutputLevel() {
+	// check -D, --debug and -debug, if set force debug and env var
+	for _, f := range os.Args {
+		if f == "-D" || f == "--debug" || f == "-debug" {
+			os.Setenv("BHOJPUR_CONTAINER_DEBUG", "1")
+			log.SetDebug(true)
+			return
+		}
+	}
+
+	// check env
+	debugEnv := os.Getenv("BHOJPUR_CONTAINER_DEBUG")
+	if debugEnv != "" {
+		showDebug, err := strconv.ParseBool(debugEnv)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error parsing boolean value from BHOJPUR_CONTAINER_DEBUG: %s\n", err)
+			os.Exit(1)
+		}
+		log.SetDebug(showDebug)
+	}
+}
 
 func main() {
 	cli.AppHelpTemplate = appHelpTemplate
 	cli.CommandHelpTemplate = commandHelpTemplate
 
+	logrus.SetOutput(colorable.NewColorableStdout())
+	setDebugOutputLevel()
+
+	if err := mainErr(); err != nil {
+		logrus.Fatal(err)
+	}
+}
+
+func mainErr() error {
 	app := cli.NewApp()
 	app.Name = filepath.Base(os.Args[0])
-	app.Usage = "Bhojpur CLI tool for creating and managing Kubernetes clusters"
+	app.Author = "Bhojpur Consulting Private Limited, India"
+	app.Email = "https://www.bhojpur-consulting.com"
+
+	app.Usage = "Bhojpur CLI tool for creating and managing Kubernetes cluster in a Data Center"
 	app.Version = version.FullVersion()
+
 	app.Before = func(ctx *cli.Context) error {
 		if ctx.GlobalBool("debug") {
 			logrus.SetLevel(logrus.DebugLevel)
 		}
-		logrus.Debugf("Bhojpur Host version: %v", app.Version)
+		logrus.Infof("Bhojpur Host cluster version: %v", app.Version)
+		logrus.Warnf("This is not an officially supported version (%s) of\nthe HostFarm Provision Engine. Please download latest official release from\n\thttps://github.com/bhojpur/host/releases", app.Version)
 		return nil
 	}
 	app.Commands = []cli.Command{
@@ -83,8 +133,6 @@ func main() {
 		cmd.SetClusterSizeCommand(),
 	}
 	app.CommandNotFound = cmdNotFound
-	app.Author = "Bhojpur Consulting Private Limited, India"
-	app.Email = "https://www.bhojpur-consulting.com"
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "debug",
@@ -99,6 +147,7 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		logrus.Fatal(err)
 	}
+	return nil
 }
 
 func cmdNotFound(c *cli.Context, command string) {

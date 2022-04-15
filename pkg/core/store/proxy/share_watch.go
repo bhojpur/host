@@ -21,7 +21,7 @@ package proxy
 // THE SOFTWARE.
 
 import (
-	"github.com/bhojpur/host/pkg/common/broadcast"
+	"github.com/bhojpur/host/pkg/core/broadcast"
 	"github.com/bhojpur/host/pkg/core/types"
 )
 

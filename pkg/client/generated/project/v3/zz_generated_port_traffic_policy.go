@@ -6,7 +6,7 @@ const (
 	PortTrafficPolicyFieldLoadBalancer     = "loadBalancer"
 	PortTrafficPolicyFieldOutlierDetection = "outlierDetection"
 	PortTrafficPolicyFieldPort             = "port"
-	PortTrafficPolicyFieldTLS              = "tls"
+	PortTrafficPolicyFieldTls              = "tls"
 )
 
 type PortTrafficPolicy struct {
@@ -14,5 +14,5 @@ type PortTrafficPolicy struct {
 	LoadBalancer     *LoadBalancerSettings   `json:"loadBalancer,omitempty" yaml:"loadBalancer,omitempty"`
 	OutlierDetection *OutlierDetection       `json:"outlierDetection,omitempty" yaml:"outlierDetection,omitempty"`
 	Port             *PortSelector           `json:"port,omitempty" yaml:"port,omitempty"`
-	TLS              *TLSSettings            `json:"tls,omitempty" yaml:"tls,omitempty"`
+	Tls              *TLSSettings            `json:"tls,omitempty" yaml:"tls,omitempty"`
 }

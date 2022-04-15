@@ -3,8 +3,8 @@ package v1alpha3
 import (
 	"github.com/bhojpur/host/pkg/core/lifecycle"
 	"github.com/bhojpur/host/pkg/core/resource"
-	"github.com/knative/pkg/apis/istio/v1alpha3"
 	"k8s.io/apimachinery/pkg/runtime"
+	"knative.dev/pkg/apis/istio/v1alpha3"
 )
 
 type VirtualServiceLifecycle interface {

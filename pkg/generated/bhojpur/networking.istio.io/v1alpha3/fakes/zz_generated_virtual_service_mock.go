@@ -11,11 +11,11 @@ import (
 	"github.com/bhojpur/host/pkg/core/controller"
 	"github.com/bhojpur/host/pkg/core/objectclient"
 	networkingistioiov1alpha3 "github.com/bhojpur/host/pkg/generated/bhojpur/networking.istio.io/v1alpha3"
-	istiov1alpha3 "github.com/knative/pkg/apis/istio/v1alpha3"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
+	istiov1alpha3 "knative.dev/pkg/apis/istio/v1alpha3"
 )
 
 // Ensure, that VirtualServiceListerMock does implement networkingistioiov1alpha3.VirtualServiceLister.

@@ -39,10 +39,10 @@ import (
 )
 
 const (
-	versionsURL  = "https://releases.rancher.com/os/releases.yml"
-	isoURL       = "https://releases.rancher.com/os/%s/rancheros.iso"
-	hostnameTmpl = `sudo mkdir -p /var/lib/rancher/conf/cloud-config.d/
-sudo tee /var/lib/rancher/conf/cloud-config.d/machine-hostname.yml << EOF
+	versionsURL  = "https://releases.bhojpur.net/os/releases.yml"
+	isoURL       = "https://releases.bhojpur.net/os/%s/bos.iso"
+	hostnameTmpl = `sudo mkdir -p /var/lib/bhojpur/conf/cloud-config.d/
+sudo tee /var/lib/bhojpur/conf/cloud-config.d/machine-hostname.yml << EOF
 #cloud-config
 
 hostname: %s
@@ -51,32 +51,32 @@ EOF
 )
 
 func init() {
-	Register("RancherOS", &RegisteredProvisioner{
-		New: NewRancherProvisioner,
+	Register("BhojpurOS", &RegisteredProvisioner{
+		New: NewBhojpurProvisioner,
 	})
 }
 
-func NewRancherProvisioner(d drivers.Driver) Provisioner {
-	return &RancherProvisioner{
+func NewBhojpurProvisioner(d drivers.Driver) Provisioner {
+	return &BhojpurProvisioner{
 		GenericProvisioner{
 			SSHCommander:      GenericSSHCommander{Driver: d},
-			BhojpurOptionsDir: "/var/lib/rancher/conf",
-			DaemonOptionsFile: "/var/lib/rancher/conf/bhojpur",
-			OsReleaseID:       "rancheros",
+			BhojpurOptionsDir: "/var/lib/bhojpur/conf",
+			DaemonOptionsFile: "/var/lib/bhojpur/conf/bhojpur",
+			OsReleaseID:       "bhojpuros",
 			Driver:            d,
 		},
 	}
 }
 
-type RancherProvisioner struct {
+type BhojpurProvisioner struct {
 	GenericProvisioner
 }
 
-func (provisioner *RancherProvisioner) String() string {
-	return "rancheros"
+func (provisioner *BhojpurProvisioner) String() string {
+	return "bhojpuros"
 }
 
-func (provisioner *RancherProvisioner) Service(name string, action serviceaction.ServiceAction) error {
+func (provisioner *BhojpurProvisioner) Service(name string, action serviceaction.ServiceAction) error {
 	command := fmt.Sprintf("sudo system-bhojpur %s %s", action.String(), name)
 
 	if _, err := provisioner.SSHCommand(command); err != nil {
@@ -86,7 +86,7 @@ func (provisioner *RancherProvisioner) Service(name string, action serviceaction
 	return nil
 }
 
-func (provisioner *RancherProvisioner) Package(name string, action pkgaction.PackageAction) error {
+func (provisioner *BhojpurProvisioner) Package(name string, action pkgaction.PackageAction) error {
 	var packageAction string
 
 	if name == "bhojpur" && action == pkgaction.Upgrade {
@@ -103,7 +103,7 @@ func (provisioner *RancherProvisioner) Package(name string, action pkgaction.Pac
 		packageAction = "upgrade"
 	}
 
-	command := fmt.Sprintf("sudo ros service %s %s", packageAction, name)
+	command := fmt.Sprintf("sudo opsutl service %s %s", packageAction, name)
 
 	if _, err := provisioner.SSHCommand(command); err != nil {
 		return err
@@ -112,8 +112,8 @@ func (provisioner *RancherProvisioner) Package(name string, action pkgaction.Pac
 	return nil
 }
 
-func (provisioner *RancherProvisioner) Provision(swarmOptions swarm.Options, authOptions auth.Options, engineOptions engine.Options) error {
-	log.Debugf("Running RancherOS provisioner on %s", provisioner.Driver.GetMachineName())
+func (provisioner *BhojpurProvisioner) Provision(swarmOptions swarm.Options, authOptions auth.Options, engineOptions engine.Options) error {
+	log.Debugf("Running Bhojpur OS provisioner on %s", provisioner.Driver.GetMachineName())
 
 	provisioner.SwarmOptions = swarmOptions
 	provisioner.AuthOptions = authOptions
@@ -160,7 +160,7 @@ func (provisioner *RancherProvisioner) Provision(swarmOptions swarm.Options, aut
 	return err
 }
 
-func (provisioner *RancherProvisioner) SetHostname(hostname string) error {
+func (provisioner *BhojpurProvisioner) SetHostname(hostname string) error {
 	// /etc/hosts is bind mounted from Bhojpur Host, this is hack to that the generic provisioner doesn't try to mv /etc/hosts
 	if _, err := provisioner.SSHCommand("sed /127.0.1.1/d /etc/hosts > /tmp/hosts && cat /tmp/hosts | sudo tee /etc/hosts"); err != nil {
 		return err
@@ -177,13 +177,13 @@ func (provisioner *RancherProvisioner) SetHostname(hostname string) error {
 	return nil
 }
 
-func (provisioner *RancherProvisioner) upgrade() error {
+func (provisioner *BhojpurProvisioner) upgrade() error {
 	switch provisioner.Driver.DriverName() {
 	case "virtualbox":
 		return provisioner.upgradeIso()
 	default:
 		log.Infof("Running upgrade")
-		if _, err := provisioner.SSHCommand("sudo ros os upgrade -f --no-reboot"); err != nil {
+		if _, err := provisioner.SSHCommand("sudo opsutl os upgrade -f --no-reboot"); err != nil {
 			return err
 		}
 
@@ -195,9 +195,9 @@ func (provisioner *RancherProvisioner) upgrade() error {
 	}
 }
 
-func (provisioner *RancherProvisioner) upgradeIso() error {
+func (provisioner *BhojpurProvisioner) upgradeIso() error {
 	// Largely copied from Boot2Docker provisioner, we should find a way to share this code
-	log.Info("Stopping machine to do the upgrade...")
+	log.Info("Stopping Bhojpur Host machine to do the upgrade...")
 
 	if err := provisioner.Driver.Stop(); err != nil {
 		return err
@@ -209,7 +209,7 @@ func (provisioner *RancherProvisioner) upgradeIso() error {
 
 	machineName := provisioner.GetDriver().GetMachineName()
 
-	log.Infof("Upgrading machine %s...", machineName)
+	log.Infof("Upgrading Bhojpur Host machine %s...", machineName)
 
 	// TODO: Ideally, we should not read from mcndirs directory at all.
 	// The driver should be able to communicate how and where to place the
@@ -225,12 +225,12 @@ func (provisioner *RancherProvisioner) upgradeIso() error {
 	//	return err
 	//}
 
-	// Copy the latest version of rancheros ISO to the machine's directory
+	// Copy the latest version of BhojpurOS ISO to the machine's directory
 	if err := b2dutils.CopyIsoToMachineDir(url, machineName); err != nil {
 		return err
 	}
 
-	log.Infof("Starting machine back up...")
+	log.Infof("Starting Bhojpur Host machine back up...")
 
 	if err := provisioner.Driver.Start(); err != nil {
 		return err
@@ -239,7 +239,7 @@ func (provisioner *RancherProvisioner) upgradeIso() error {
 	return mutils.WaitFor(drivers.MachineInState(provisioner.Driver, state.Running))
 }
 
-func (provisioner *RancherProvisioner) getLatestISOURL() (string, error) {
+func (provisioner *BhojpurProvisioner) getLatestISOURL() (string, error) {
 	log.Debugf("Reading %s", versionsURL)
 	resp, err := http.Get(versionsURL)
 	if err != nil {
@@ -261,9 +261,9 @@ func (provisioner *RancherProvisioner) getLatestISOURL() (string, error) {
 }
 
 func selectBhojpurHost(p Provisioner, baseURL string) error {
-	// TODO: detect if its a cloud-init, or a ros setting - and use that..
+	// TODO: detect if its a cloud-init, or a opsutl setting - and use that..
 	if output, err := p.SSHCommand(fmt.Sprintf("wget -O- %s | sh -", baseURL)); err != nil {
-		return fmt.Errorf("error selecting bhojpur host: (%s) %s", err, output)
+		return fmt.Errorf("error selecting Bhojpur Host: (%s) %s", err, output)
 	}
 
 	return nil

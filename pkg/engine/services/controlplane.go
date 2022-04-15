@@ -186,7 +186,7 @@ func processControlPlaneForUpgrade(ctx context.Context, kubeClient *kubernetes.C
 				if !controlPlaneUpgradable && !workerPlaneUpgradable {
 					log.Infof(ctx, "Upgrade not required for controlplane and worker components of host %v", runHost.HostnameOverride)
 					if err := k8s.CordonUncordon(kubeClient, runHost.HostnameOverride, false); err != nil {
-						// This node didn't undergo an upgrade, so RKE will only log any error after uncordoning it and won't count this in maxUnavailable
+						// This node didn't undergo an upgrade, so BKE will only log any error after uncordoning it and won't count this in maxUnavailable
 						logrus.Errorf("[controlplane] Failed to uncordon node %v, error: %v", runHost.HostnameOverride, err)
 					}
 					continue

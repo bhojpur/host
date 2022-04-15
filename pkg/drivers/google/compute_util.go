@@ -283,7 +283,7 @@ func (c *ComputeUtil) createInstance(d *Driver) error {
 
 	instance := &raw.Instance{
 		Name:        c.instanceName,
-		Description: "Bhojpur Host vm",
+		Description: "Bhojpur Host virtual machine",
 		MachineType: c.zoneURL + "/machineTypes/" + d.MachineType,
 		Disks: []*raw.AttachedDisk{
 			{

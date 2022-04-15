@@ -1,4 +1,7 @@
-package drivers
+//go:build !linux
+// +build !linux
+
+package k8s
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -21,22 +24,12 @@ package drivers
 // THE SOFTWARE.
 
 import (
-	"github.com/bhojpur/host/pkg/container/drivers/aks"
-	"github.com/bhojpur/host/pkg/container/drivers/bke"
-	"github.com/bhojpur/host/pkg/container/drivers/eks"
-	"github.com/bhojpur/host/pkg/container/drivers/gke"
-	kubeimport "github.com/bhojpur/host/pkg/container/drivers/import"
-	"github.com/bhojpur/host/pkg/container/types"
+	"context"
+	"fmt"
+
+	"k8s.io/client-go/tools/clientcmd"
 )
 
-var Drivers map[string]types.Driver
-
-func init() {
-	Drivers = map[string]types.Driver{
-		"googlekubernetesengine":        gke.NewDriver(),
-		"azurekubernetesservice":        aks.NewDriver(),
-		"amazonelasticcontainerservice": eks.NewDriver(),
-		"import":                        kubeimport.NewDriver(),
-		"bke":                           bke.NewDriver(),
-	}
+func getEmbedded(ctx context.Context) (bool, clientcmd.ClientConfig, error) {
+	return false, nil, fmt.Errorf("embedded only supported on Linux OS")
 }
