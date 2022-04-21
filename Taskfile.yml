@@ -105,14 +105,15 @@ tasks:
         - gotestsum --junitfile test-results/unit-tests.xml -- -short -race -cover -coverprofile test-results/cover.out ./...
 
     swagger.gen:
-        desc: Generate Go code
+        desc: Generate Go source code from the OpenAPI specifications
         cmds:
-        - GOFLAGS=-mod=mod go generate bhojpur.net/host/internal bhojpur.net/host/pkg/swagger
+        - /usr/bin/swagger generate server -f ./pkg/swagger/swagger.yml --copyright-file=./pkg/swagger/boilerplate.go.txt --server-package=pkg/machine/server --model-package=pkg/machine/models --main-package=machine/server
+        - /usr/bin/swagger generate client -f ./pkg/swagger/swagger.yml --copyright-file=./pkg/swagger/boilerplate.go.txt --client-package=pkg/api/machine --model-package=pkg/machine/models --skip-models
 
     swagger.validate:
         desc: Validate all the Swagger API specifications
         cmds:
-        - swagger validate pkg/swagger/swagger.yml
+        - /usr/bin/swagger validate ./pkg/swagger/swagger.yml
 
     swagger.doc:
         desc: Generate documentation for Swagger specified APIs

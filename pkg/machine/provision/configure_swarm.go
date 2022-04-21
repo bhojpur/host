@@ -31,7 +31,7 @@ import (
 	"github.com/bhojpur/host/pkg/machine/engine"
 	"github.com/bhojpur/host/pkg/machine/log"
 	"github.com/bhojpur/host/pkg/machine/swarm"
-	"github.com/samalba/dockerclient"
+	"github.com/docker/docker/api/types/container"
 )
 
 func configureSwarm(p Provisioner, swarmOptions swarm.Options, authOptions auth.Options) error {
@@ -67,9 +67,9 @@ func configureSwarm(p Provisioner, swarmOptions swarm.Options, authOptions auth.
 	}
 
 	parts = strings.Split(u.Host, ":")
-	port := parts[1]
+	//port := parts[1]
 
-	bhojpurDir := p.GetBhojpurOptionsDir()
+	//bhojpurDir := p.GetBhojpurOptionsDir()
 	bhojpurHost := &cengine.RemoteBhojpur{
 		HostURL:    fmt.Sprintf("tcp://%s:%d", ip, enginePort),
 		AuthOption: &authOptions,
@@ -98,14 +98,14 @@ func configureSwarm(p Provisioner, swarmOptions swarm.Options, authOptions auth.
 		//Discovery must be at end of command
 		cmdMaster = append(cmdMaster, swarmOptions.Discovery)
 
-		hostBind := fmt.Sprintf("%s:%s", bhojpurDir, bhojpurDir)
-		masterHostConfig := dockerclient.HostConfig{
-			RestartPolicy: dockerclient.RestartPolicy{
+		//hostBind := fmt.Sprintf("%s:%s", bhojpurDir, bhojpurDir)
+		/*masterHostConfig := container.HostConfig{
+			RestartPolicy: container.RestartPolicy{
 				Name:              "always",
 				MaximumRetryCount: 0,
 			},
 			Binds: []string{hostBind},
-			PortBindings: map[string][]dockerclient.PortBinding{
+			PortBindings: map[string][]container.PortBinding{
 				fmt.Sprintf("%s/tcp", port): {
 					{
 						HostIp:   "0.0.0.0",
@@ -113,17 +113,17 @@ func configureSwarm(p Provisioner, swarmOptions swarm.Options, authOptions auth.
 					},
 				},
 			},
-		}
+		}*/
 
-		swarmMasterConfig := &dockerclient.ContainerConfig{
+		swarmMasterConfig := &container.Config{
 			Image: swarmOptions.Image,
 			Env:   swarmOptions.Env,
-			ExposedPorts: map[string]struct{}{
+			/*ExposedPorts: map[string]struct{}{
 				"2375/tcp":                  {},
 				fmt.Sprintf("%s/tcp", port): {},
-			},
+			},*/
 			Cmd:        cmdMaster,
-			HostConfig: masterHostConfig,
+			//HostConfig: masterHostConfig,
 		}
 
 		err = cengine.CreateContainer(bhojpurHost, swarmMasterConfig, "swarm-agent-master")
@@ -133,12 +133,12 @@ func configureSwarm(p Provisioner, swarmOptions swarm.Options, authOptions auth.
 	}
 
 	if swarmOptions.Agent {
-		workerHostConfig := dockerclient.HostConfig{
-			RestartPolicy: dockerclient.RestartPolicy{
+		/*workerHostConfig := container.HostConfig{
+			RestartPolicy: container.RestartPolicy{
 				Name:              "always",
 				MaximumRetryCount: 0,
 			},
-		}
+		}*/
 
 		cmdWorker := []string{
 			"join",
@@ -150,11 +150,11 @@ func configureSwarm(p Provisioner, swarmOptions swarm.Options, authOptions auth.
 		}
 		cmdWorker = append(cmdWorker, swarmOptions.Discovery)
 
-		swarmWorkerConfig := &dockerclient.ContainerConfig{
+		swarmWorkerConfig := &container.Config{
 			Image:      swarmOptions.Image,
 			Env:        swarmOptions.Env,
 			Cmd:        cmdWorker,
-			HostConfig: workerHostConfig,
+			//HostConfig: workerHostConfig,
 		}
 		if swarmOptions.IsExperimental {
 			swarmWorkerConfig.Cmd = append([]string{"--experimental"}, swarmWorkerConfig.Cmd...)

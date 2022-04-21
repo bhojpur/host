@@ -74,18 +74,18 @@ func setDebugOutputLevel() {
 	// check -D, --debug and -debug, if set force debug and env var
 	for _, f := range os.Args {
 		if f == "-D" || f == "--debug" || f == "-debug" {
-			os.Setenv("BHOJPUR_ENGINE_DEBUG", "1")
+			os.Setenv("BHOJPUR_HOST_OPERATIO_DEBUG", "1")
 			log.SetDebug(true)
 			return
 		}
 	}
 
 	// check env
-	debugEnv := os.Getenv("BHOJPUR_ENGINE_DEBUG")
+	debugEnv := os.Getenv("BHOJPUR_HOST_OPERATION_DEBUG")
 	if debugEnv != "" {
 		showDebug, err := strconv.ParseBool(debugEnv)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error parsing boolean value from BHOJPUR_ENGINE_DEBUG: %s\n", err)
+			fmt.Fprintf(os.Stderr, "Error parsing boolean value from BHOJPUR_HOST_OPERATION_DEBUG: %s\n", err)
 			os.Exit(1)
 		}
 		log.SetDebug(showDebug)
@@ -110,7 +110,7 @@ func mainErr() error {
 	app.Author = "Bhojpur Consulting Private Limited, India."
 	app.Email = "https://www.bhojpur-consulting.com"
 	app.Version = version.FullVersion()
-	app.Usage = "Bhojpur CLI tool for installing Kubernetes Engine that works everywhere"
+	app.Usage = "Bhojpur Host CLI tool for installing Kubernetes Engine that works everywhere"
 
 	app.Before = func(ctx *cli.Context) error {
 		if ctx.GlobalBool("quiet") {

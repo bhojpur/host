@@ -20,7 +20,9 @@ package client
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import "fmt"
+import (
+	"fmt"
+)
 
 var CurrentBhojpurVersioner BhojpurVersioner = &defaultBhojpurVersioner{}
 
@@ -40,10 +42,5 @@ func (dv *defaultBhojpurVersioner) BhojpurVersion(host BhojpurHost) (string, err
 		return "", fmt.Errorf("Unable to query Bhojpur Host version: %s", err)
 	}
 
-	version, err := client.Version()
-	if err != nil {
-		return "", fmt.Errorf("Unable to query Bhojpur Host version: %s", err)
-	}
-
-	return version.Version, nil
+	return client.ClientVersion(), nil
 }

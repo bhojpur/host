@@ -21,14 +21,17 @@ package client
 // THE SOFTWARE.
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/bhojpur/host/pkg/machine/cert"
-	"github.com/samalba/dockerclient"
+	docker "github.com/docker/docker/client"
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 )
 
 // BhojpurClient creates a Bhojpur Host client for a given host.
-func BhojpurClient(bhojpurHost BhojpurHost) (*dockerclient.DockerClient, error) {
+func BhojpurClient(bhojpurHost BhojpurHost) (*docker.Client, error) {
 	url, err := bhojpurHost.URL()
 	if err != nil {
 		return nil, err
@@ -38,28 +41,32 @@ func BhojpurClient(bhojpurHost BhojpurHost) (*dockerclient.DockerClient, error) 
 	if err != nil {
 		return nil, fmt.Errorf("Unable to read TLS config: %s", err)
 	}
+	fmt.Println("read TLS config: %s", tlsConfig)
 
-	return dockerclient.NewDockerClient(url, tlsConfig)
+	// set DOCKER_HOST, DOCKER_API_VERSION, DOCKER_CERT_PATH, DOCKER_TLS_VERIFY
+	return docker.NewClientWithOpts(docker.FromEnv)
 }
 
 // CreateContainer creates a Bhojpur Host container.
-func CreateContainer(bhojpurHost BhojpurHost, config *dockerclient.ContainerConfig, name string) error {
+func CreateContainer(bhojpurHost BhojpurHost, config *container.Config, name string) error {
 	engine, err := BhojpurClient(bhojpurHost)
 	if err != nil {
 		return err
 	}
 
-	if err = engine.PullImage(config.Image, nil); err != nil {
+	imageName := config.Image
+	if _, err = engine.ImagePull(context.Background(), imageName, types.ImagePullOptions{}); err != nil {
 		return fmt.Errorf("Unable to pull Bhojpur Host image: %s", err)
 	}
 
-	var authConfig *dockerclient.AuthConfig
-	containerID, err := engine.CreateContainer(config, name, authConfig)
+	//var authConfig *types.AuthConfig
+	//containerID, err := engine.ContainerCreate(config, name, authConfig)
+	cntr, err := engine.ContainerCreate(context.Background(), config, nil, nil, nil, name)
 	if err != nil {
 		return fmt.Errorf("Error while creating Bhojpur Host container: %s", err)
 	}
 
-	if err = engine.StartContainer(containerID, &config.HostConfig); err != nil {
+	if err = engine.ContainerStart(context.Background(), cntr.ID, types.ContainerStartOptions{} /*&config.HostConfig*/); err != nil {
 		return fmt.Errorf("Error while starting Bhojpur Host container: %s", err)
 	}
 
