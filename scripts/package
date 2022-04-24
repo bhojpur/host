@@ -33,6 +33,15 @@ SUFFIX=""
 
 TAG=${TAG:-${VERSION}${SUFFIX}}
 REPO=${REPO:-bhojpur}
+
+if echo $TAG | grep -q dirty; then
+    TAG=dev
+fi
+
+if [ -n "$DRONE_TAG" ]; then
+    TAG=$DRONE_TAG
+fi
+
 IMAGE=${REPO}/host:${TAG}
 
 cd $(dirname $0)/..
@@ -40,9 +49,11 @@ BASEDIR=$(pwd)
 mkdir -p $BASEDIR/dist/artifacts
 
 cd $BASEDIR/bin
-tar -cvzf $BASEDIR/dist/artifacts/hostutl-${ARCH}.tar.gz hostutl
+tar -cvzf $BASEDIR/dist/artifacts/hostutl-${ARCH}.tar.gz hostutl hostfarm hostops
 cd $BASEDIR
 
 cp ./bin/hostutl ./package
 
 docker build -f package/Dockerfile -t ${IMAGE} package
+
+echo Built ${IMAGE}

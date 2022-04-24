@@ -19,14 +19,39 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+#
+# This script will create a txt file with Kubernetes versions, which will be
+# used as (pre) release decription by Drone
 
-set -e
+set -e -x
 
-trap "chown -R $DAPPER_UID:$DAPPER_GID ." exit
+RELEASEFILE="./build/bin/hostops-k8sversions.txt"
 
-mkdir -p bin dist dist/images build/bin
-if [ -e ./scripts/$1 ]; then
-    ./scripts/"$@"
-else
-    exec "$@"
+mkdir -p ./build/bin
+
+echo "Creating ${RELEASEFILE}"
+
+DEFAULT_VERSION=$(./bin/hostops --quiet config --list-version)
+if [ $? -ne 0 ]; then
+  echo "Non zero exit code while running 'hostops config -l'"
+  exit 1
 fi
+
+DEFAULT_VERSION_FOUND="false"
+echo "# Bhojpur Kubernetes Engine versions" > $RELEASEFILE
+for VERSION in $(./bin/hostops --quiet config --all --list-version | sort -V); do
+  if [ "$VERSION" == "$DEFAULT_VERSION" ]; then
+    echo "- \`${VERSION}\` (default)" >> $RELEASEFILE
+    DEFAULT_VERSION_FOUND="true"
+  else
+    echo "- \`${VERSION}\`" >> $RELEASEFILE
+  fi
+done
+
+if [ "$DEFAULT_VERSION_FOUND" == "false" ]; then
+  echo -e "\nNo default version found!" >> $RELEASEFILE
+fi
+
+echo "Done creating ${RELEASEFILE}"
+
+cat $RELEASEFILE

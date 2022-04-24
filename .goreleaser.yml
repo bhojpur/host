@@ -1,0 +1,76 @@
+builds:
+- id: hostutl
+  env:
+  - CGO_ENABLED=0
+  main: cmd/machine/main.go
+  binary: hostutl
+  ldflags:
+  - -s -w -X github.com/bhojpur/host/pkg/version.Version={{.Version}}-{{.ShortCommit}}
+- id: hostfarm
+  env:
+  - CGO_ENABLED=0
+  main: cmd/cluster/main.go
+  binary: hostfarm
+  ldflags:
+  - -s -w -X github.com/bhojpur/host/pkg/version.Version={{.Version}}-{{.ShortCommit}}
+- id: hostops
+  env:
+  - CGO_ENABLED=0
+  main: cmd/operation/main.go
+  binary: hostops
+  ldflags:
+  - -s -w -X github.com/bhojpur/host/pkg/version.Version={{.Version}}-{{.ShortCommit}}
+archives:
+- id: hostutl
+  builds:
+  - hostutl
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    386: i386
+    amd64: x86_64
+- id: hostfarm
+  files:
+  - "none*"
+  format: binary
+  builds:
+  - hostfarm
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    386: i386
+    amd64: x86_64
+- id: hostops
+  files:
+  - "none*"
+  format: binary
+  builds:
+  - hostops
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    386: i386
+    amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+release:
+  prerelease: auto
+dockers:
+  - goos: linux
+    goarch: amd64
+    goarm: ''
+    dockerfile: package/Dockerfile
+    image_templates:
+    - "ghcr.io/bhojpur/host:{{ .Tag }}"
+    extra_files:
+    - README.md
+    - package/download_driver.sh
+    - package/entrypoint.sh
