@@ -16,7 +16,7 @@ RUN mkdir -p .bhojpur/machine/machines /etc/bhojpur/ssl /home/bhojpur && \
 COPY download_driver.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/download_driver.sh
 
-COPY bhojpur entrypoint.sh /usr/local/bin/
+COPY hostutl entrypoint.sh /usr/local/bin/
 RUN chmod 0777 /usr/local/bin
 
 USER 1000

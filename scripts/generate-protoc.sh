@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 #
@@ -20,13 +20,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-set -e
-
-trap "chown -R $DAPPER_UID:$DAPPER_GID ." exit
-
-mkdir -p bin dist build/bin
-if [ -e ./scripts/$1 ]; then
-    ./scripts/"$@"
-else
-    exec "$@"
-fi
+#protoc -I pkg/cluster/types/ pkg/cluster/types/drivers.proto --go_out=plugins=grpc:types
+protoc --go_out=./pkg/cluster --go-grpc_out=./pkg/cluster --go_opt=module=github.com/bhojpur/host/pkg/cluster --go-grpc_opt=require_unimplemented_servers=false,module=github.com/bhojpur/host/pkg/cluster pkg/cluster/types/drivers.proto
